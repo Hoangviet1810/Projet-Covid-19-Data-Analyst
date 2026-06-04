@@ -15,7 +15,7 @@
         "  message: false\n",
         "---"
       ],
-      "id": "b18b0da1"
+      "id": "c0d22ecb"
     },
     {
       "cell_type": "code",
@@ -26,7 +26,7 @@
         "import seaborn as sns\n",
         "import matplotlib.pyplot as plt"
       ],
-      "id": "e0f8cdfc",
+      "id": "143fb6a6",
       "execution_count": null,
       "outputs": []
     },
@@ -38,7 +38,7 @@
         "\n",
         "## Chargement des données préparées"
       ],
-      "id": "c62f8640"
+      "id": "cbbc8d53"
     },
     {
       "cell_type": "code",
@@ -47,7 +47,7 @@
         "corona_dataset_aggregated = pd.read_csv(\"data/corona_dataset_aggregated.csv\",index_col=0)\n",
         "corona_dataset_aggregated.head()"
       ],
-      "id": "32d124d1",
+      "id": "36b0b021",
       "execution_count": null,
       "outputs": []
     },
@@ -57,7 +57,7 @@
       "source": [
         "## Extraction des données finales (total cases)"
       ],
-      "id": "930ad3bf"
+      "id": "8697ce19"
     },
     {
       "cell_type": "code",
@@ -66,7 +66,7 @@
         "corona_dataset_aggregated[\"Total Cases\"] = corona_dataset_aggregated.iloc[:, -1]\n",
         "corona_dataset_aggregated[\"Total Cases\"].head()"
       ],
-      "id": "62a90b16",
+      "id": "eb1314cd",
       "execution_count": null,
       "outputs": []
     },
@@ -78,7 +78,7 @@
         "\n",
         "## Top pays les plus touchés"
       ],
-      "id": "a81fcc89"
+      "id": "e22c14a5"
     },
     {
       "cell_type": "code",
@@ -87,7 +87,7 @@
         "top_countries = corona_dataset_aggregated[\"Total Cases\"].sort_values(ascending=False).head(10)\n",
         "top_countries "
       ],
-      "id": "b57bae87",
+      "id": "c1f000a3",
       "execution_count": null,
       "outputs": []
     },
@@ -97,7 +97,7 @@
       "source": [
         "### Visualisation des 10 pays les plus touchés"
       ],
-      "id": "27afb7f1"
+      "id": "5872b9ca"
     },
     {
       "cell_type": "code",
@@ -108,7 +108,7 @@
         "plt.ylabel(\"Cases\")\n",
         "plt.show()"
       ],
-      "id": "4491bea2",
+      "id": "5d50fcf9",
       "execution_count": null,
       "outputs": []
     },
@@ -118,7 +118,7 @@
       "source": [
         "### Visualisation des courbes d'évolution pour quelques pays"
       ],
-      "id": "00b20310"
+      "id": "fe85d107"
     },
     {
       "cell_type": "code",
@@ -131,7 +131,7 @@
         "corona_dataset_aggregated.loc[\"US\"].plot()\n",
         "plt.legend()"
       ],
-      "id": "30badc49",
+      "id": "d0e34f7e",
       "execution_count": null,
       "outputs": []
     },
@@ -143,7 +143,7 @@
         "\n",
         "### Calcul du taux d’infection maximal"
       ],
-      "id": "188cba1f"
+      "id": "4e63deeb"
     },
     {
       "cell_type": "code",
@@ -154,7 +154,7 @@
         "corona_dataset_aggregated.loc[\"US\"].diff().plot()\n",
         "plt.legend()"
       ],
-      "id": "8968439d",
+      "id": "7580143e",
       "execution_count": null,
       "outputs": []
     },
@@ -164,7 +164,7 @@
       "source": [
         "Dans cette partie, on visualise le nombre de nouveaux cas de COVID-19 par jour pour trois pays : le Vietnam, la France et les États-Unis, en appliquant la méthode de différence (diff) aux données cumulatives. Cette transformation permet de passer du nombre total de cas au nombre de cas journaliers, ce qui met en évidence les variations quotidiennes et les pics de contamination. Ce type de représentation est particulièrement utile pour analyser la dynamique réelle de propagation du virus et comparer l’intensité des vagues épidémiques entre les pays.\n"
       ],
-      "id": "1dab4a97"
+      "id": "185d44a5"
     },
     {
       "cell_type": "code",
@@ -178,7 +178,7 @@
         "corona_data = pd.DataFrame(corona_dataset_aggregated[\"Max infection rate\"])\n",
         "corona_data.head()"
       ],
-      "id": "bb0c9d6d",
+      "id": "6545b58e",
       "execution_count": null,
       "outputs": []
     },
@@ -188,7 +188,7 @@
       "source": [
         "Dans cette partie, on calcule le taux maximal d’infection quotidienne pour chaque pays à partir des données cumulatives de COVID-19. Cette mesure correspond à la plus forte augmentation du nombre de cas confirmés observée en une seule journée, obtenue en appliquant la méthode de différence (diff) puis en sélectionnant la valeur maximale. Cet indicateur permet d’identifier les pics de contamination et de comparer l’intensité des vagues épidémiques entre les pays, indépendamment du nombre total de c\n"
       ],
-      "id": "e988df50"
+      "id": "4a0c895c"
     },
     {
       "cell_type": "code",
@@ -198,7 +198,7 @@
         "\n",
         "covid_ts.head()"
       ],
-      "id": "3065b987",
+      "id": "4ee9abc5",
       "execution_count": null,
       "outputs": []
     },
@@ -213,7 +213,7 @@
         "plt.legend(loc=\"upper left\", bbox_to_anchor=(1, 1))\n",
         "plt.show()"
       ],
-      "id": "9227bcbd",
+      "id": "427f5bbf",
       "execution_count": null,
       "outputs": []
     },
@@ -228,7 +228,7 @@
         "plt.legend(loc=\"upper left\", bbox_to_anchor=(1, 1))\n",
         "plt.show()  "
       ],
-      "id": "919cc5ef",
+      "id": "2fc3a4b6",
       "execution_count": null,
       "outputs": []
     },
@@ -238,7 +238,7 @@
       "source": [
         "## Visualisation de l’évolution globale des cas de COVID-19"
       ],
-      "id": "0a0e850d"
+      "id": "dba96393"
     },
     {
       "cell_type": "code",
@@ -250,7 +250,7 @@
         "plt.title(\"Évolution globale des cas COVID-19\")\n",
         "plt.show()"
       ],
-      "id": "5aa0060c",
+      "id": "d98a8202",
       "execution_count": null,
       "outputs": []
     },
@@ -264,7 +264,7 @@
         "\n",
         "## Visualisation de l’évolution des nouveaux cas quotidiens à l’échelle mondiale"
       ],
-      "id": "b08519d9"
+      "id": "45163d31"
     },
     {
       "cell_type": "code",
@@ -277,7 +277,7 @@
         "plt.title(\"Nouveaux cas quotidiens dans le monde\")\n",
         "plt.show()"
       ],
-      "id": "7dad644e",
+      "id": "59cf70b6",
       "execution_count": null,
       "outputs": []
     },
@@ -290,7 +290,7 @@
         "\n",
         "## Visualisation de l’évolution des cas pour les 10 pays les plus touchés"
       ],
-      "id": "9c972cf6"
+      "id": "cbaa68ac"
     },
     {
       "cell_type": "code",
@@ -299,7 +299,7 @@
         "top10 = covid_ts.iloc[-1].sort_values(ascending=False).head(10)\n",
         "top10"
       ],
-      "id": "a82b3402",
+      "id": "7874afc4",
       "execution_count": null,
       "outputs": []
     },
@@ -309,7 +309,7 @@
       "source": [
         "## Normalize "
       ],
-      "id": "c5d2372b"
+      "id": "b9082911"
     },
     {
       "cell_type": "code",
@@ -324,7 +324,7 @@
         "plt.title(\"Comparaison normalisée des pays\")\n",
         "plt.show()"
       ],
-      "id": "88f5b6d1",
+      "id": "5d970075",
       "execution_count": null,
       "outputs": []
     },
@@ -342,7 +342,7 @@
         "\n",
         "## Chargement des données préparées"
       ],
-      "id": "2cb02bdb"
+      "id": "dd864a75"
     },
     {
       "cell_type": "code",
@@ -352,7 +352,7 @@
         "happiness_report_clean = happiness_report_clean.reset_index()\n",
         "happiness_report_clean.head()"
       ],
-      "id": "3bc9b929",
+      "id": "a30823f3",
       "execution_count": null,
       "outputs": []
     },
@@ -362,7 +362,7 @@
       "source": [
         "## Chargement des données préparées"
       ],
-      "id": "7560294a"
+      "id": "40c23848"
     },
     {
       "cell_type": "code",
@@ -376,7 +376,7 @@
         "happiness_data.set_index(\"Country name\", inplace=True)\n",
         "happiness_data.head()"
       ],
-      "id": "929a75ae",
+      "id": "fc521e8e",
       "execution_count": null,
       "outputs": []
     },
@@ -386,7 +386,7 @@
       "source": [
         "## Analyse du bonheur mondial"
       ],
-      "id": "f7ec4f91"
+      "id": "93b030c9"
     },
     {
       "cell_type": "code",
@@ -402,7 +402,7 @@
         "plt.xticks(rotation=45)\n",
         "plt.show()"
       ],
-      "id": "31645003",
+      "id": "53aa4c1d",
       "execution_count": null,
       "outputs": []
     },
@@ -414,7 +414,7 @@
         "On observe que les pays nordiques dominent largement le classement.\n",
         "Cela suggère que des facteurs comme la stabilité sociale, le revenu élevé et la confiance institutionnelle jouent un rôle important dans le niveau de bonheur."
       ],
-      "id": "9cafccfa"
+      "id": "8581ce6b"
     },
     {
       "cell_type": "code",
@@ -427,7 +427,7 @@
         "plt.xticks(rotation=45)\n",
         "plt.show()"
       ],
-      "id": "9e01d42a",
+      "id": "2cac21bd",
       "execution_count": null,
       "outputs": []
     },
@@ -441,7 +441,7 @@
         "\n",
         "## Distribution du bonheur mondial"
       ],
-      "id": "1fce9a0f"
+      "id": "7f34927e"
     },
     {
       "cell_type": "code",
@@ -451,7 +451,7 @@
         "plt.title(\"Distribution du bonheur mondial\")\n",
         "plt.show()"
       ],
-      "id": "9f2b997e",
+      "id": "2474ce53",
       "execution_count": null,
       "outputs": []
     },
@@ -461,7 +461,7 @@
       "source": [
         "### Bonheur moyen par région"
       ],
-      "id": "c145b7b2"
+      "id": "b10d332a"
     },
     {
       "cell_type": "code",
@@ -473,7 +473,7 @@
         "plt.title(\"Bonheur moyen par région\")\n",
         "plt.show()"
       ],
-      "id": "646caa58",
+      "id": "25381153",
       "execution_count": null,
       "outputs": []
     },
@@ -485,7 +485,7 @@
         "\n",
         "### Top 10 pays les plus corrompus"
       ],
-      "id": "7bb644b5"
+      "id": "403c23fc"
     },
     {
       "cell_type": "code",
@@ -504,7 +504,7 @@
         "plt.xticks(rotation=45)\n",
         "plt.show()"
       ],
-      "id": "6a6ed6d5",
+      "id": "cdcbbe6e",
       "execution_count": null,
       "outputs": []
     },
@@ -520,7 +520,7 @@
         "\n",
         "### Top 10 pays les moins corrompus"
       ],
-      "id": "0ae47c3e"
+      "id": "eda802f6"
     },
     {
       "cell_type": "code",
@@ -539,7 +539,7 @@
         "plt.xticks(rotation=45)\n",
         "plt.show()"
       ],
-      "id": "a5eba915",
+      "id": "43fe245e",
       "execution_count": null,
       "outputs": []
     },
@@ -555,7 +555,7 @@
         "\n",
         "## Summary statistics"
       ],
-      "id": "b1e94a44"
+      "id": "3b722693"
     },
     {
       "cell_type": "code",
@@ -563,7 +563,7 @@
       "source": [
         "happiness_report_clean.describe()"
       ],
-      "id": "20a73f55",
+      "id": "6c9e6adb",
       "execution_count": null,
       "outputs": []
     },
@@ -573,7 +573,7 @@
       "source": [
         "## Corrélations entre les facteurs de bonheur"
       ],
-      "id": "93883639"
+      "id": "6544fa69"
     },
     {
       "cell_type": "code",
@@ -583,7 +583,7 @@
         "plt.title(\"Corrélations entre facteurs de bonheur\")\n",
         "plt.show()"
       ],
-      "id": "c1321bad",
+      "id": "30b79d69",
       "execution_count": null,
       "outputs": []
     },
@@ -625,7 +625,7 @@
         "\n",
         "---"
       ],
-      "id": "f96294fe"
+      "id": "9b724b7f"
     },
     {
       "cell_type": "markdown",
@@ -645,7 +645,7 @@
         "\n",
         "## Relation entre le PIB et le bonheur"
       ],
-      "id": "bf1fb176"
+      "id": "1d4a021a"
     },
     {
       "cell_type": "code",
@@ -659,7 +659,7 @@
         "plt.title(\"GDP vs Happiness\")\n",
         "plt.show()"
       ],
-      "id": "ce4b6950",
+      "id": "d44bd32d",
       "execution_count": null,
       "outputs": []
     },
@@ -674,7 +674,7 @@
         "\n",
         "## Relation entre le soutien social et le bonheur"
       ],
-      "id": "fc3a06bd"
+      "id": "8f89bde3"
     },
     {
       "cell_type": "code",
@@ -688,7 +688,7 @@
         "plt.title(\"Social support vs Happiness\")\n",
         "plt.show()"
       ],
-      "id": "b87b227d",
+      "id": "8eb7c095",
       "execution_count": null,
       "outputs": []
     },
@@ -703,7 +703,7 @@
         "\n",
         "# Jointure des données"
       ],
-      "id": "a95e4cc1"
+      "id": "773b0562"
     },
     {
       "cell_type": "code",
@@ -714,7 +714,7 @@
         "data_merge.shape\n",
         "data_merge.head()"
       ],
-      "id": "c8469f7a",
+      "id": "7807d5ed",
       "execution_count": null,
       "outputs": []
     }

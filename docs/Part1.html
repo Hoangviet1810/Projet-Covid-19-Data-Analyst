@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="NGUYEN Duc Hoang Viet">
+
+<title>Partie 1 Préparation et nettoyage des données – Projet COVID-19 Data Analysis using Python</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-86fbd99215607a29b2a977ca276203cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Projet COVID-19 Data Analysis using Python</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Accueil</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./Part1.html" aria-current="page"> 
+<span class="menu-text">Préparation et nettoyage</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Part2.html"> 
+<span class="menu-text">Analyse exploratoire</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Part3.html"> 
+<span class="menu-text">Corrélations et régressions</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Part4.qmd"> 
+<span class="menu-text">Conclusion</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/Hoangviet1810/Projet-Covid-19-Data-Analyst"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://ndhviet.wixsite.com/hviet-portfolio"> 
+<span class="menu-text">Portfolio de Viet</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/hoang-viet1810/?isSelfProfile=false"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sur cette page</h2>
+   
+  <ul>
+  <li><a href="#base-de-données-covid-19" id="toc-base-de-données-covid-19" class="nav-link active" data-scroll-target="#base-de-données-covid-19"><span class="header-section-number">1</span> Base de données COVID-19</a>
+  <ul class="collapse">
+  <li><a href="#importation-des-bibliothèques-des-covid-19" id="toc-importation-des-bibliothèques-des-covid-19" class="nav-link" data-scroll-target="#importation-des-bibliothèques-des-covid-19"><span class="header-section-number">1.1</span> Importation des bibliothèques des COVID-19</a></li>
+  <li><a href="#importation-des-données" id="toc-importation-des-données" class="nav-link" data-scroll-target="#importation-des-données"><span class="header-section-number">1.2</span> Importation des données</a></li>
+  <li><a href="#vérification-initiale" id="toc-vérification-initiale" class="nav-link" data-scroll-target="#vérification-initiale"><span class="header-section-number">1.3</span> Vérification initiale</a></li>
+  <li><a href="#nettoyage-des-données" id="toc-nettoyage-des-données" class="nav-link" data-scroll-target="#nettoyage-des-données"><span class="header-section-number">1.4</span> Nettoyage des données</a>
+  <ul class="collapse">
+  <li><a href="#suppression-des-colonnes-inutiles" id="toc-suppression-des-colonnes-inutiles" class="nav-link" data-scroll-target="#suppression-des-colonnes-inutiles"><span class="header-section-number">1.4.1</span> Suppression des colonnes inutiles</a></li>
+  <li><a href="#agrégation-par-pays" id="toc-agrégation-par-pays" class="nav-link" data-scroll-target="#agrégation-par-pays"><span class="header-section-number">1.4.2</span> Agrégation par pays</a></li>
+  <li><a href="#vérification-après-agrégation" id="toc-vérification-après-agrégation" class="nav-link" data-scroll-target="#vérification-après-agrégation"><span class="header-section-number">1.4.3</span> Vérification après agrégation</a></li>
+  <li><a href="#aperçu-des-données" id="toc-aperçu-des-données" class="nav-link" data-scroll-target="#aperçu-des-données"><span class="header-section-number">1.4.4</span> Aperçu des données</a></li>
+  </ul></li>
+  <li><a href="#vérification-des-données-manquantes" id="toc-vérification-des-données-manquantes" class="nav-link" data-scroll-target="#vérification-des-données-manquantes"><span class="header-section-number">1.5</span> Vérification des données manquantes</a></li>
+  <li><a href="#vérification-des-doublons" id="toc-vérification-des-doublons" class="nav-link" data-scroll-target="#vérification-des-doublons"><span class="header-section-number">1.6</span> Vérification des doublons</a></li>
+  <li><a href="#transformation-en-série-temporelle" id="toc-transformation-en-série-temporelle" class="nav-link" data-scroll-target="#transformation-en-série-temporelle"><span class="header-section-number">1.7</span> Transformation en série temporelle</a></li>
+  </ul></li>
+  <li><a href="#base-de-données-world-happiness-report-2021" id="toc-base-de-données-world-happiness-report-2021" class="nav-link" data-scroll-target="#base-de-données-world-happiness-report-2021"><span class="header-section-number">2</span> Base de données World Happiness Report 2021</a>
+  <ul class="collapse">
+  <li><a href="#importation-des-données-1" id="toc-importation-des-données-1" class="nav-link" data-scroll-target="#importation-des-données-1"><span class="header-section-number">2.1</span> Importation des données</a></li>
+  <li><a href="#vérification-structure" id="toc-vérification-structure" class="nav-link" data-scroll-target="#vérification-structure"><span class="header-section-number">2.2</span> Vérification structure</a></li>
+  <li><a href="#nettoyage-des-données-1" id="toc-nettoyage-des-données-1" class="nav-link" data-scroll-target="#nettoyage-des-données-1"><span class="header-section-number">2.3</span> Nettoyage des données</a>
+  <ul class="collapse">
+  <li><a href="#suppression-des-colonnes-inutiles-1" id="toc-suppression-des-colonnes-inutiles-1" class="nav-link" data-scroll-target="#suppression-des-colonnes-inutiles-1"><span class="header-section-number">2.3.1</span> Suppression des colonnes inutiles</a></li>
+  <li><a href="#vérification-après-nettoyage" id="toc-vérification-après-nettoyage" class="nav-link" data-scroll-target="#vérification-après-nettoyage"><span class="header-section-number">2.3.2</span> Vérification après nettoyage</a></li>
+  </ul></li>
+  <li><a href="#vérification-des-données-manquantes-1" id="toc-vérification-des-données-manquantes-1" class="nav-link" data-scroll-target="#vérification-des-données-manquantes-1"><span class="header-section-number">2.4</span> Vérification des données manquantes</a></li>
+  <li><a href="#vérification-des-doublons-1" id="toc-vérification-des-doublons-1" class="nav-link" data-scroll-target="#vérification-des-doublons-1"><span class="header-section-number">2.5</span> Vérification des doublons</a></li>
+  <li><a href="#aperçu-final" id="toc-aperçu-final" class="nav-link" data-scroll-target="#aperçu-final"><span class="header-section-number">2.6</span> Aperçu final</a></li>
+  </ul></li>
+  <li><a href="#préparation-pour-analyse-croisée-covid-vs-happiness" id="toc-préparation-pour-analyse-croisée-covid-vs-happiness" class="nav-link" data-scroll-target="#préparation-pour-analyse-croisée-covid-vs-happiness"><span class="header-section-number">3</span> Préparation pour analyse croisée (COVID vs Happiness)</a>
+  <ul class="collapse">
+  <li><a href="#vérification-mismatch-country-names" id="toc-vérification-mismatch-country-names" class="nav-link" data-scroll-target="#vérification-mismatch-country-names"><span class="header-section-number">3.1</span> Vérification mismatch country names</a></li>
+  <li><a href="#harmonisation-des-noms-de-pays" id="toc-harmonisation-des-noms-de-pays" class="nav-link" data-scroll-target="#harmonisation-des-noms-de-pays"><span class="header-section-number">3.2</span> Harmonisation des noms de pays</a></li>
+  <li><a href="#vérification-des-incohérences-entre-les-noms-de-pays" id="toc-vérification-des-incohérences-entre-les-noms-de-pays" class="nav-link" data-scroll-target="#vérification-des-incohérences-entre-les-noms-de-pays"><span class="header-section-number">3.3</span> Vérification des incohérences entre les noms de pays</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Partie 1 Préparation et nettoyage des données</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>NGUYEN Duc Hoang Viet </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="base-de-données-covid-19" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Base de données COVID-19</h1>
+<section id="importation-des-bibliothèques-des-covid-19" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="importation-des-bibliothèques-des-covid-19"><span class="header-section-number">1.1</span> Importation des bibliothèques des COVID-19</h2>
+<div id="09e0d07b" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Modules are imported."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Modules are imported.</code></pre>
+</div>
+</div>
+</section>
+<section id="importation-des-données" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="importation-des-données"><span class="header-section-number">1.2</span> Importation des données</h2>
+<div id="bbe4baa5" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> dirname, _, filenames <span class="kw">in</span> os.walk(<span class="st">'Covid-19_from_John_Hopkins_University'</span>):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> filename <span class="kw">in</span> filenames:</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(os.path.join(dirname, filename))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Covid-19_from_John_Hopkins_University/CONVENIENT_us_deaths.csv
+Covid-19_from_John_Hopkins_University/CONVENIENT_us_metadata.csv
+Covid-19_from_John_Hopkins_University/RAW_global_deaths.csv
+Covid-19_from_John_Hopkins_University/CONVENIENT_global_metadata.csv
+Covid-19_from_John_Hopkins_University/RAW_global_confirmed_cases.csv
+Covid-19_from_John_Hopkins_University/CONVENIENT_us_confirmed_cases.csv
+Covid-19_from_John_Hopkins_University/CONVENIENT_global_confirmed_cases.csv
+Covid-19_from_John_Hopkins_University/CONVENIENT_global_deaths.csv
+Covid-19_from_John_Hopkins_University/RAW_us_deaths.csv
+Covid-19_from_John_Hopkins_University/RAW_us_confirmed_cases.csv</code></pre>
+</div>
+</div>
+<div id="be5d6de5" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>corona_dataset <span class="op">=</span> pd.read_csv(<span class="st">"Covid-19_from_John_Hopkins_University/RAW_global_confirmed_cases.csv"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>corona_dataset.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Country/Region</th>
+<th data-quarto-table-cell-role="th">Province/State</th>
+<th data-quarto-table-cell-role="th">Lat</th>
+<th data-quarto-table-cell-role="th">Long</th>
+<th data-quarto-table-cell-role="th">1/22/20</th>
+<th data-quarto-table-cell-role="th">1/23/20</th>
+<th data-quarto-table-cell-role="th">1/24/20</th>
+<th data-quarto-table-cell-role="th">1/25/20</th>
+<th data-quarto-table-cell-role="th">1/26/20</th>
+<th data-quarto-table-cell-role="th">1/27/20</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">2/28/23</th>
+<th data-quarto-table-cell-role="th">3/1/23</th>
+<th data-quarto-table-cell-role="th">3/2/23</th>
+<th data-quarto-table-cell-role="th">3/3/23</th>
+<th data-quarto-table-cell-role="th">3/4/23</th>
+<th data-quarto-table-cell-role="th">3/5/23</th>
+<th data-quarto-table-cell-role="th">3/6/23</th>
+<th data-quarto-table-cell-role="th">3/7/23</th>
+<th data-quarto-table-cell-role="th">3/8/23</th>
+<th data-quarto-table-cell-role="th">3/9/23</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Afghanistan</td>
+<td>NaN</td>
+<td>33.93911</td>
+<td>67.709953</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>209322</td>
+<td>209340</td>
+<td>209358</td>
+<td>209362</td>
+<td>209369</td>
+<td>209390</td>
+<td>209406</td>
+<td>209436</td>
+<td>209451</td>
+<td>209451</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Albania</td>
+<td>NaN</td>
+<td>41.15330</td>
+<td>20.168300</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>334391</td>
+<td>334408</td>
+<td>334408</td>
+<td>334427</td>
+<td>334427</td>
+<td>334427</td>
+<td>334427</td>
+<td>334427</td>
+<td>334443</td>
+<td>334457</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Algeria</td>
+<td>NaN</td>
+<td>28.03390</td>
+<td>1.659600</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>271441</td>
+<td>271448</td>
+<td>271463</td>
+<td>271469</td>
+<td>271469</td>
+<td>271477</td>
+<td>271477</td>
+<td>271490</td>
+<td>271494</td>
+<td>271496</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Andorra</td>
+<td>NaN</td>
+<td>42.50630</td>
+<td>1.521800</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>47866</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47890</td>
+<td>47890</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Angola</td>
+<td>NaN</td>
+<td>-11.20270</td>
+<td>17.873900</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>105255</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105288</td>
+<td>105288</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 1147 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="vérification-initiale" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="vérification-initiale"><span class="header-section-number">1.3</span> Vérification initiale</h2>
+<div id="87d2ba6e" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>corona_dataset.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>(289, 1147)</code></pre>
+</div>
+</div>
+<p>289 lignes (countries/regions) et 1147 colonnes (metadata + dates)</p>
+</section>
+<section id="nettoyage-des-données" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="nettoyage-des-données"><span class="header-section-number">1.4</span> Nettoyage des données</h2>
+<section id="suppression-des-colonnes-inutiles" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="suppression-des-colonnes-inutiles"><span class="header-section-number">1.4.1</span> Suppression des colonnes inutiles</h3>
+<div id="4275685f" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_clean <span class="op">=</span> corona_dataset.drop([<span class="st">"Lat"</span>, <span class="st">"Long"</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="agrégation-par-pays" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="agrégation-par-pays"><span class="header-section-number">1.4.2</span> Agrégation par pays</h3>
+<div id="ebf08705" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated <span class="op">=</span> corona_dataset_clean.groupby(<span class="st">'Country/Region'</span>).<span class="bu">sum</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Exportation des données agrégées par pays</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.to_csv(<span class="st">"data/corona_dataset_aggregated.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="vérification-après-agrégation" class="level3" data-number="1.4.3">
+<h3 data-number="1.4.3" class="anchored" data-anchor-id="vérification-après-agrégation"><span class="header-section-number">1.4.3</span> Vérification après agrégation</h3>
+<div id="792950c1" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>(201, 1144)</code></pre>
+</div>
+</div>
+</section>
+<section id="aperçu-des-données" class="level3" data-number="1.4.4">
+<h3 data-number="1.4.4" class="anchored" data-anchor-id="aperçu-des-données"><span class="header-section-number">1.4.4</span> Aperçu des données</h3>
+<div id="b030324b" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Province/State</th>
+<th data-quarto-table-cell-role="th">1/22/20</th>
+<th data-quarto-table-cell-role="th">1/23/20</th>
+<th data-quarto-table-cell-role="th">1/24/20</th>
+<th data-quarto-table-cell-role="th">1/25/20</th>
+<th data-quarto-table-cell-role="th">1/26/20</th>
+<th data-quarto-table-cell-role="th">1/27/20</th>
+<th data-quarto-table-cell-role="th">1/28/20</th>
+<th data-quarto-table-cell-role="th">1/29/20</th>
+<th data-quarto-table-cell-role="th">1/30/20</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">2/28/23</th>
+<th data-quarto-table-cell-role="th">3/1/23</th>
+<th data-quarto-table-cell-role="th">3/2/23</th>
+<th data-quarto-table-cell-role="th">3/3/23</th>
+<th data-quarto-table-cell-role="th">3/4/23</th>
+<th data-quarto-table-cell-role="th">3/5/23</th>
+<th data-quarto-table-cell-role="th">3/6/23</th>
+<th data-quarto-table-cell-role="th">3/7/23</th>
+<th data-quarto-table-cell-role="th">3/8/23</th>
+<th data-quarto-table-cell-role="th">3/9/23</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Country/Region</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Afghanistan</th>
+<td></td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>209322</td>
+<td>209340</td>
+<td>209358</td>
+<td>209362</td>
+<td>209369</td>
+<td>209390</td>
+<td>209406</td>
+<td>209436</td>
+<td>209451</td>
+<td>209451</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Albania</th>
+<td></td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>334391</td>
+<td>334408</td>
+<td>334408</td>
+<td>334427</td>
+<td>334427</td>
+<td>334427</td>
+<td>334427</td>
+<td>334427</td>
+<td>334443</td>
+<td>334457</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Algeria</th>
+<td></td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>271441</td>
+<td>271448</td>
+<td>271463</td>
+<td>271469</td>
+<td>271469</td>
+<td>271477</td>
+<td>271477</td>
+<td>271490</td>
+<td>271494</td>
+<td>271496</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Andorra</th>
+<td></td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>47866</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47890</td>
+<td>47890</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Angola</th>
+<td></td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>105255</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105288</td>
+<td>105288</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 1144 columns</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="vérification-des-données-manquantes" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="vérification-des-données-manquantes"><span class="header-section-number">1.5</span> Vérification des données manquantes</h2>
+<div id="5788a3b4" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.isnull().<span class="bu">sum</span>().<span class="bu">sum</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>np.int64(0)</code></pre>
+</div>
+</div>
+<p>La fonction isnull() est utilisée pour vérifier la présence de valeurs manquantes dans le DataFrame corona_dataset_aggregated. La méthode sum() est appliquée deux fois pour obtenir le nombre total de valeurs manquantes dans l’ensemble du DataFrame. Si le résultat est 0, cela signifie qu’il n’y a aucune valeur manquante dans les données agrégées par pays. Et avec la fonction sum() permet de compter le nombre de valeurs manquantes pour chaque colonne en additionnant les valeurs True (1) et False (0) dans chaque colonne. En appliquant sum() à l’ensemble du DataFrame, on obtient le nombre total de valeurs manquantes dans toutes les colonnes combinées.</p>
+<p>Et, on obient np.int64(0) qui indique qu’il n’y a aucune valeur manquante dans le DataFrame corona_dataset_aggregated après l’agrégation par pays. Cela signifie que toutes les données sont complètes et qu’il n’y a pas de valeurs manquantes à traiter dans ce DataFrame agrégé. Par conséquent, on peut procéder à l’analyse des données sans se soucier des valeurs manquantes.</p>
+</section>
+<section id="vérification-des-doublons" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="vérification-des-doublons"><span class="header-section-number">1.6</span> Vérification des doublons</h2>
+<div id="5ddbaf20" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.duplicated().<span class="bu">sum</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>np.int64(0)</code></pre>
+</div>
+</div>
+<p>la fonction duplicated() qui retoure un table de booléens indiquant si une ligne est un doublon ou non. En appliquant sum() à ce résultat, on obtient le nombre total de lignes dupliquées dans le DataFrame corona_dataset_aggregated. Si le résultat est 0, cela signifie qu’il n’y a aucune ligne dupliquée dans les données agrégées par pays. Cela indique que chaque pays est représenté une seule fois dans le DataFrame, ce qui est important pour garantir l’intégrité des données et éviter les biais dans l’analyse.</p>
+</section>
+<section id="transformation-en-série-temporelle" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="transformation-en-série-temporelle"><span class="header-section-number">1.7</span> Transformation en série temporelle</h2>
+<div id="d6f1a099" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>covid_clean <span class="op">=</span> corona_dataset_aggregated.copy() <span class="co"># Création d'une copie du DataFrame pour éviter de modifier l'original</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>covid_clean <span class="op">=</span> covid_clean.drop(columns<span class="op">=</span>[<span class="st">"Lat"</span>, <span class="st">"Long"</span>], errors<span class="op">=</span><span class="st">"ignore"</span>) <span class="co"># Suppression des colonnes "Lat" et "Long" si elles existent, sinon ignorer l'erreur</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>covid_ts <span class="op">=</span> covid_clean.T <span class="co"># Transposition du DataFrame pour que les dates deviennent les index et les pays deviennent les colonnes</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>covid_ts.index <span class="op">=</span> pd.to_datetime(covid_ts.index, errors<span class="op">=</span><span class="st">"coerce"</span>) <span class="co"># Conversion de l'index en format datetime, en ignorant les erreurs de conversion</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>covid_ts <span class="op">=</span> covid_ts[<span class="op">~</span>covid_ts.index.isna()] <span class="co"># Suppression des lignes dont l'index n'a pas pu être converti en datetime (si nécessaire)</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>covid_ts.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Country/Region</th>
+<th data-quarto-table-cell-role="th">Afghanistan</th>
+<th data-quarto-table-cell-role="th">Albania</th>
+<th data-quarto-table-cell-role="th">Algeria</th>
+<th data-quarto-table-cell-role="th">Andorra</th>
+<th data-quarto-table-cell-role="th">Angola</th>
+<th data-quarto-table-cell-role="th">Antarctica</th>
+<th data-quarto-table-cell-role="th">Antigua and Barbuda</th>
+<th data-quarto-table-cell-role="th">Argentina</th>
+<th data-quarto-table-cell-role="th">Armenia</th>
+<th data-quarto-table-cell-role="th">Australia</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">Uruguay</th>
+<th data-quarto-table-cell-role="th">Uzbekistan</th>
+<th data-quarto-table-cell-role="th">Vanuatu</th>
+<th data-quarto-table-cell-role="th">Venezuela</th>
+<th data-quarto-table-cell-role="th">Vietnam</th>
+<th data-quarto-table-cell-role="th">West Bank and Gaza</th>
+<th data-quarto-table-cell-role="th">Winter Olympics 2022</th>
+<th data-quarto-table-cell-role="th">Yemen</th>
+<th data-quarto-table-cell-role="th">Zambia</th>
+<th data-quarto-table-cell-role="th">Zimbabwe</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2020-01-22</th>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2020-01-23</th>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2020-01-24</th>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2020-01-25</th>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2020-01-26</th>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>4</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 201 columns</p>
+</div>
+</div>
+</div>
+<div id="d8881746" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>covid_ts.to_csv(<span class="st">"data/covid_timeseries.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Le jeu de données a ensuite été exporté au format CSV afin de faciliter sa réutilisation dans les étapes ultérieures de l’analyse exploratoire des données (EDA) et de garantir la reproductibilité du projet.</p>
+</section>
+</section>
+<section id="base-de-données-world-happiness-report-2021" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Base de données World Happiness Report 2021</h1>
+<section id="importation-des-données-1" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="importation-des-données-1"><span class="header-section-number">2.1</span> Importation des données</h2>
+<div id="710688fd" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>happiness_report <span class="op">=</span> pd.read_csv(<span class="st">"World_Happiness_Report/world-happiness-report-2021.csv"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>happiness_report.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Country name</th>
+<th data-quarto-table-cell-role="th">Regional indicator</th>
+<th data-quarto-table-cell-role="th">Ladder score</th>
+<th data-quarto-table-cell-role="th">Standard error of ladder score</th>
+<th data-quarto-table-cell-role="th">upperwhisker</th>
+<th data-quarto-table-cell-role="th">lowerwhisker</th>
+<th data-quarto-table-cell-role="th">Logged GDP per capita</th>
+<th data-quarto-table-cell-role="th">Social support</th>
+<th data-quarto-table-cell-role="th">Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Generosity</th>
+<th data-quarto-table-cell-role="th">Perceptions of corruption</th>
+<th data-quarto-table-cell-role="th">Ladder score in Dystopia</th>
+<th data-quarto-table-cell-role="th">Explained by: Log GDP per capita</th>
+<th data-quarto-table-cell-role="th">Explained by: Social support</th>
+<th data-quarto-table-cell-role="th">Explained by: Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Explained by: Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Explained by: Generosity</th>
+<th data-quarto-table-cell-role="th">Explained by: Perceptions of corruption</th>
+<th data-quarto-table-cell-role="th">Dystopia + residual</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Finland</td>
+<td>Western Europe</td>
+<td>7.842</td>
+<td>0.032</td>
+<td>7.904</td>
+<td>7.780</td>
+<td>10.775</td>
+<td>0.954</td>
+<td>72.0</td>
+<td>0.949</td>
+<td>-0.098</td>
+<td>0.186</td>
+<td>2.43</td>
+<td>1.446</td>
+<td>1.106</td>
+<td>0.741</td>
+<td>0.691</td>
+<td>0.124</td>
+<td>0.481</td>
+<td>3.253</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Denmark</td>
+<td>Western Europe</td>
+<td>7.620</td>
+<td>0.035</td>
+<td>7.687</td>
+<td>7.552</td>
+<td>10.933</td>
+<td>0.954</td>
+<td>72.7</td>
+<td>0.946</td>
+<td>0.030</td>
+<td>0.179</td>
+<td>2.43</td>
+<td>1.502</td>
+<td>1.108</td>
+<td>0.763</td>
+<td>0.686</td>
+<td>0.208</td>
+<td>0.485</td>
+<td>2.868</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Switzerland</td>
+<td>Western Europe</td>
+<td>7.571</td>
+<td>0.036</td>
+<td>7.643</td>
+<td>7.500</td>
+<td>11.117</td>
+<td>0.942</td>
+<td>74.4</td>
+<td>0.919</td>
+<td>0.025</td>
+<td>0.292</td>
+<td>2.43</td>
+<td>1.566</td>
+<td>1.079</td>
+<td>0.816</td>
+<td>0.653</td>
+<td>0.204</td>
+<td>0.413</td>
+<td>2.839</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Iceland</td>
+<td>Western Europe</td>
+<td>7.554</td>
+<td>0.059</td>
+<td>7.670</td>
+<td>7.438</td>
+<td>10.878</td>
+<td>0.983</td>
+<td>73.0</td>
+<td>0.955</td>
+<td>0.160</td>
+<td>0.673</td>
+<td>2.43</td>
+<td>1.482</td>
+<td>1.172</td>
+<td>0.772</td>
+<td>0.698</td>
+<td>0.293</td>
+<td>0.170</td>
+<td>2.967</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Netherlands</td>
+<td>Western Europe</td>
+<td>7.464</td>
+<td>0.027</td>
+<td>7.518</td>
+<td>7.410</td>
+<td>10.932</td>
+<td>0.942</td>
+<td>72.4</td>
+<td>0.913</td>
+<td>0.175</td>
+<td>0.338</td>
+<td>2.43</td>
+<td>1.501</td>
+<td>1.079</td>
+<td>0.753</td>
+<td>0.647</td>
+<td>0.302</td>
+<td>0.384</td>
+<td>2.798</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="vérification-structure" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="vérification-structure"><span class="header-section-number">2.2</span> Vérification structure</h2>
+<div id="2fcdc4d6" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>happiness_report.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>(149, 20)</code></pre>
+</div>
+</div>
+</section>
+<section id="nettoyage-des-données-1" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="nettoyage-des-données-1"><span class="header-section-number">2.3</span> Nettoyage des données</h2>
+<section id="suppression-des-colonnes-inutiles-1" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="suppression-des-colonnes-inutiles-1"><span class="header-section-number">2.3.1</span> Suppression des colonnes inutiles</h3>
+<div id="79c306ac" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>happiness_report_clean <span class="op">=</span> happiness_report.drop([<span class="st">"Standard error of ladder score"</span>, <span class="st">"upperwhisker"</span>, <span class="st">"lowerwhisker"</span>],axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="vérification-après-nettoyage" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="vérification-après-nettoyage"><span class="header-section-number">2.3.2</span> Vérification après nettoyage</h3>
+<div id="291c00a9" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>happiness_report.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>(149, 20)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="vérification-des-données-manquantes-1" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="vérification-des-données-manquantes-1"><span class="header-section-number">2.4</span> Vérification des données manquantes</h2>
+<div id="0f72b0b6" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>happiness_report_clean.isnull().<span class="bu">sum</span>().<span class="bu">sum</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>np.int64(0)</code></pre>
+</div>
+</div>
+</section>
+<section id="vérification-des-doublons-1" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="vérification-des-doublons-1"><span class="header-section-number">2.5</span> Vérification des doublons</h2>
+<div id="19ccf1e8" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>happiness_report_clean.duplicated().<span class="bu">sum</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>np.int64(0)</code></pre>
+</div>
+</div>
+</section>
+<section id="aperçu-final" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="aperçu-final"><span class="header-section-number">2.6</span> Aperçu final</h2>
+<div id="b6f6971f" class="cell" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>happiness_report_clean.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Country name</th>
+<th data-quarto-table-cell-role="th">Regional indicator</th>
+<th data-quarto-table-cell-role="th">Ladder score</th>
+<th data-quarto-table-cell-role="th">Logged GDP per capita</th>
+<th data-quarto-table-cell-role="th">Social support</th>
+<th data-quarto-table-cell-role="th">Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Generosity</th>
+<th data-quarto-table-cell-role="th">Perceptions of corruption</th>
+<th data-quarto-table-cell-role="th">Ladder score in Dystopia</th>
+<th data-quarto-table-cell-role="th">Explained by: Log GDP per capita</th>
+<th data-quarto-table-cell-role="th">Explained by: Social support</th>
+<th data-quarto-table-cell-role="th">Explained by: Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Explained by: Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Explained by: Generosity</th>
+<th data-quarto-table-cell-role="th">Explained by: Perceptions of corruption</th>
+<th data-quarto-table-cell-role="th">Dystopia + residual</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Finland</td>
+<td>Western Europe</td>
+<td>7.842</td>
+<td>10.775</td>
+<td>0.954</td>
+<td>72.0</td>
+<td>0.949</td>
+<td>-0.098</td>
+<td>0.186</td>
+<td>2.43</td>
+<td>1.446</td>
+<td>1.106</td>
+<td>0.741</td>
+<td>0.691</td>
+<td>0.124</td>
+<td>0.481</td>
+<td>3.253</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Denmark</td>
+<td>Western Europe</td>
+<td>7.620</td>
+<td>10.933</td>
+<td>0.954</td>
+<td>72.7</td>
+<td>0.946</td>
+<td>0.030</td>
+<td>0.179</td>
+<td>2.43</td>
+<td>1.502</td>
+<td>1.108</td>
+<td>0.763</td>
+<td>0.686</td>
+<td>0.208</td>
+<td>0.485</td>
+<td>2.868</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Switzerland</td>
+<td>Western Europe</td>
+<td>7.571</td>
+<td>11.117</td>
+<td>0.942</td>
+<td>74.4</td>
+<td>0.919</td>
+<td>0.025</td>
+<td>0.292</td>
+<td>2.43</td>
+<td>1.566</td>
+<td>1.079</td>
+<td>0.816</td>
+<td>0.653</td>
+<td>0.204</td>
+<td>0.413</td>
+<td>2.839</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Iceland</td>
+<td>Western Europe</td>
+<td>7.554</td>
+<td>10.878</td>
+<td>0.983</td>
+<td>73.0</td>
+<td>0.955</td>
+<td>0.160</td>
+<td>0.673</td>
+<td>2.43</td>
+<td>1.482</td>
+<td>1.172</td>
+<td>0.772</td>
+<td>0.698</td>
+<td>0.293</td>
+<td>0.170</td>
+<td>2.967</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Netherlands</td>
+<td>Western Europe</td>
+<td>7.464</td>
+<td>10.932</td>
+<td>0.942</td>
+<td>72.4</td>
+<td>0.913</td>
+<td>0.175</td>
+<td>0.338</td>
+<td>2.43</td>
+<td>1.501</td>
+<td>1.079</td>
+<td>0.753</td>
+<td>0.647</td>
+<td>0.302</td>
+<td>0.384</td>
+<td>2.798</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="préparation-pour-analyse-croisée-covid-vs-happiness" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Préparation pour analyse croisée (COVID vs Happiness)</h1>
+<section id="vérification-mismatch-country-names" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="vérification-mismatch-country-names"><span class="header-section-number">3.1</span> Vérification mismatch country names</h2>
+<div id="e8cdf4ed" class="cell" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span>(happiness_report_clean[<span class="st">"Country name"</span>]) <span class="op">-</span> <span class="bu">set</span>(corona_dataset_aggregated.index)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>{'Czech Republic',
+ 'Hong Kong S.A.R. of China',
+ 'Ivory Coast',
+ 'Myanmar',
+ 'North Cyprus',
+ 'Palestinian Territories',
+ 'South Korea',
+ 'Swaziland',
+ 'Taiwan Province of China',
+ 'Turkmenistan',
+ 'United States'}</code></pre>
+</div>
+</div>
+<div id="f684346a" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>happiness_report_clean.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>(149, 17)</code></pre>
+</div>
+</div>
+</section>
+<section id="harmonisation-des-noms-de-pays" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="harmonisation-des-noms-de-pays"><span class="header-section-number">3.2</span> Harmonisation des noms de pays</h2>
+<div id="c0031d4a" class="cell" data-execution_count="22">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>merged_data <span class="op">=</span> happiness_report_clean.merge(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    corona_dataset_aggregated,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">"Country name"</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    right_index<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    how<span class="op">=</span><span class="st">"inner"</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>merged_data.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Country name</th>
+<th data-quarto-table-cell-role="th">Regional indicator</th>
+<th data-quarto-table-cell-role="th">Ladder score</th>
+<th data-quarto-table-cell-role="th">Logged GDP per capita</th>
+<th data-quarto-table-cell-role="th">Social support</th>
+<th data-quarto-table-cell-role="th">Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Generosity</th>
+<th data-quarto-table-cell-role="th">Perceptions of corruption</th>
+<th data-quarto-table-cell-role="th">Ladder score in Dystopia</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">2/28/23</th>
+<th data-quarto-table-cell-role="th">3/1/23</th>
+<th data-quarto-table-cell-role="th">3/2/23</th>
+<th data-quarto-table-cell-role="th">3/3/23</th>
+<th data-quarto-table-cell-role="th">3/4/23</th>
+<th data-quarto-table-cell-role="th">3/5/23</th>
+<th data-quarto-table-cell-role="th">3/6/23</th>
+<th data-quarto-table-cell-role="th">3/7/23</th>
+<th data-quarto-table-cell-role="th">3/8/23</th>
+<th data-quarto-table-cell-role="th">3/9/23</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Finland</td>
+<td>Western Europe</td>
+<td>7.842</td>
+<td>10.775</td>
+<td>0.954</td>
+<td>72.0</td>
+<td>0.949</td>
+<td>-0.098</td>
+<td>0.186</td>
+<td>2.43</td>
+<td>...</td>
+<td>1462169</td>
+<td>1462169</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1463644</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Denmark</td>
+<td>Western Europe</td>
+<td>7.620</td>
+<td>10.933</td>
+<td>0.954</td>
+<td>72.7</td>
+<td>0.946</td>
+<td>0.030</td>
+<td>0.179</td>
+<td>2.43</td>
+<td>...</td>
+<td>3449989</td>
+<td>3450101</td>
+<td>3450223</td>
+<td>3450336</td>
+<td>3450336</td>
+<td>3450336</td>
+<td>3450587</td>
+<td>3450757</td>
+<td>3450897</td>
+<td>3451036</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Switzerland</td>
+<td>Western Europe</td>
+<td>7.571</td>
+<td>11.117</td>
+<td>0.942</td>
+<td>74.4</td>
+<td>0.919</td>
+<td>0.025</td>
+<td>0.292</td>
+<td>2.43</td>
+<td>...</td>
+<td>4412439</td>
+<td>4412439</td>
+<td>4412439</td>
+<td>4412439</td>
+<td>4412439</td>
+<td>4412439</td>
+<td>4412439</td>
+<td>4413911</td>
+<td>4413911</td>
+<td>4413911</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Iceland</td>
+<td>Western Europe</td>
+<td>7.554</td>
+<td>10.878</td>
+<td>0.983</td>
+<td>73.0</td>
+<td>0.955</td>
+<td>0.160</td>
+<td>0.673</td>
+<td>2.43</td>
+<td>...</td>
+<td>209093</td>
+<td>209093</td>
+<td>209093</td>
+<td>209093</td>
+<td>209093</td>
+<td>209093</td>
+<td>209093</td>
+<td>209137</td>
+<td>209137</td>
+<td>209137</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Netherlands</td>
+<td>Western Europe</td>
+<td>7.464</td>
+<td>10.932</td>
+<td>0.942</td>
+<td>72.4</td>
+<td>0.913</td>
+<td>0.175</td>
+<td>0.338</td>
+<td>2.43</td>
+<td>...</td>
+<td>8708982</td>
+<td>8709011</td>
+<td>8709011</td>
+<td>8710897</td>
+<td>8710897</td>
+<td>8710897</td>
+<td>8710897</td>
+<td>8712835</td>
+<td>8712835</td>
+<td>8712835</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 1161 columns</p>
+</div>
+</div>
+</div>
+<div id="6d62ef38" class="cell" data-execution_count="23">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Nombre de pays dans Happiness Report :"</span>, <span class="bu">len</span>(happiness_report_clean))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Nombre de pays après fusion :"</span>, <span class="bu">len</span>(merged_data))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Nombre de pays dans Happiness Report : 149
+Nombre de pays après fusion : 138</code></pre>
+</div>
+</div>
+</section>
+<section id="vérification-des-incohérences-entre-les-noms-de-pays" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="vérification-des-incohérences-entre-les-noms-de-pays"><span class="header-section-number">3.3</span> Vérification des incohérences entre les noms de pays</h2>
+<div id="8ca747ee" class="cell" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>happiness_report_clean[<span class="st">"Country name"</span>] <span class="op">=</span> happiness_report_clean[<span class="st">"Country name"</span>].replace({</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"United States"</span>: <span class="st">"US"</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"South Korea"</span>: <span class="st">"Korea, South"</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Czech Republic"</span>: <span class="st">"Czechia"</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Myanmar"</span>: <span class="st">"Burma"</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Swaziland"</span>: <span class="st">"Eswatini"</span>,</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ivory Coast"</span>: <span class="st">"Cote d'Ivoire"</span>,</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Palestinian Territories"</span>: <span class="st">"West Bank and Gaza"</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>happiness_report_clean.to_csv(<span class="st">"data/happiness_report_clean.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>last_date <span class="op">=</span> corona_dataset_aggregated.columns[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated[<span class="st">"Total Cases"</span>] <span class="op">=</span> corona_dataset_aggregated[last_date]</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>merged_data <span class="op">=</span> happiness_report_clean.merge(</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>    corona_dataset_aggregated,</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">"Country name"</span>,</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>    right_index<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>    how<span class="op">=</span><span class="st">"inner"</span></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>merged_data.to_csv(<span class="st">"data/merged_data.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>merged_data.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Country name</th>
+<th data-quarto-table-cell-role="th">Regional indicator</th>
+<th data-quarto-table-cell-role="th">Ladder score</th>
+<th data-quarto-table-cell-role="th">Logged GDP per capita</th>
+<th data-quarto-table-cell-role="th">Social support</th>
+<th data-quarto-table-cell-role="th">Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Generosity</th>
+<th data-quarto-table-cell-role="th">Perceptions of corruption</th>
+<th data-quarto-table-cell-role="th">Ladder score in Dystopia</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">3/1/23</th>
+<th data-quarto-table-cell-role="th">3/2/23</th>
+<th data-quarto-table-cell-role="th">3/3/23</th>
+<th data-quarto-table-cell-role="th">3/4/23</th>
+<th data-quarto-table-cell-role="th">3/5/23</th>
+<th data-quarto-table-cell-role="th">3/6/23</th>
+<th data-quarto-table-cell-role="th">3/7/23</th>
+<th data-quarto-table-cell-role="th">3/8/23</th>
+<th data-quarto-table-cell-role="th">3/9/23</th>
+<th data-quarto-table-cell-role="th">Total Cases</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Finland</td>
+<td>Western Europe</td>
+<td>7.842</td>
+<td>10.775</td>
+<td>0.954</td>
+<td>72.0</td>
+<td>0.949</td>
+<td>-0.098</td>
+<td>0.186</td>
+<td>2.43</td>
+<td>...</td>
+<td>1462169</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1462976</td>
+<td>1463644</td>
+<td>1463644</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Denmark</td>
+<td>Western Europe</td>
+<td>7.620</td>
+<td>10.933</td>
+<td>0.954</td>
+<td>72.7</td>
+<td>0.946</td>
+<td>0.030</td>
+<td>0.179</td>
+<td>2.43</td>
+<td>...</td>
+<td>3450101</td>
+<td>3450223</td>
+<td>3450336</td>
+<td>3450336</td>
+<td>3450336</td>
+<td>3450587</td>
+<td>3450757</td>
+<td>3450897</td>
+<td>3451036</td>
+<td>3451036</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Switzerland</td>
+<td>Western Europe</td>
+<td>7.571</td>
+<td>11.117</td>
+<td>0.942</td>
+<td>74.4</td>
+<td>0.919</td>
+<td>0.025</td>
+<td>0.292</td>
+<td>2.43</td>
+<td>...</td>
+<td>4412439</td>
+<td>4412439</td>
+<td>4412439</td>
+<td>4412439</td>
+<td>4412439</td>
+<td>4412439</td>
+<td>4413911</td>
+<td>4413911</td>
+<td>4413911</td>
+<td>4413911</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Iceland</td>
+<td>Western Europe</td>
+<td>7.554</td>
+<td>10.878</td>
+<td>0.983</td>
+<td>73.0</td>
+<td>0.955</td>
+<td>0.160</td>
+<td>0.673</td>
+<td>2.43</td>
+<td>...</td>
+<td>209093</td>
+<td>209093</td>
+<td>209093</td>
+<td>209093</td>
+<td>209093</td>
+<td>209093</td>
+<td>209137</td>
+<td>209137</td>
+<td>209137</td>
+<td>209137</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Netherlands</td>
+<td>Western Europe</td>
+<td>7.464</td>
+<td>10.932</td>
+<td>0.942</td>
+<td>72.4</td>
+<td>0.913</td>
+<td>0.175</td>
+<td>0.338</td>
+<td>2.43</td>
+<td>...</td>
+<td>8709011</td>
+<td>8709011</td>
+<td>8710897</td>
+<td>8710897</td>
+<td>8710897</td>
+<td>8710897</td>
+<td>8712835</td>
+<td>8712835</td>
+<td>8712835</td>
+<td>8712835</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 1162 columns</p>
+</div>
+</div>
+</div>
+<div id="4a118b52" class="cell" data-execution_count="25">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Nombre de pays dans Happiness Report :"</span>, <span class="bu">len</span>(happiness_report_clean))</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Nombre de pays après fusion :"</span>, <span class="bu">len</span>(merged_data))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Nombre de pays dans Happiness Report : 149
+Nombre de pays après fusion : 145</code></pre>
+</div>
+</div>
+<div id="619d3717" class="cell" data-execution_count="26">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>remaining_mismatch <span class="op">=</span> <span class="bu">set</span>(happiness_report_clean[<span class="st">"Country name"</span>]) <span class="op">-</span> <span class="bu">set</span>(corona_dataset_aggregated.index)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Nombre de pays non correspondants :"</span>, <span class="bu">len</span>(remaining_mismatch))</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(remaining_mismatch)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Nombre de pays non correspondants : 4
+{'North Cyprus', 'Turkmenistan', 'Taiwan Province of China', 'Hong Kong S.A.R. of China'}</code></pre>
+</div>
+</div>
+<div id="9e709602" class="cell" data-execution_count="27">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sorted</span>(remaining_mismatch))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['Hong Kong S.A.R. of China', 'North Cyprus', 'Taiwan Province of China', 'Turkmenistan']</code></pre>
+</div>
+</div>
+<p>Une analyse des noms de pays a révélé quelques divergences entre les deux bases de données. Après harmonisation des principales correspondances, 145 pays ont pu être fusionnés. Quatre territoires (Hong Kong S.A.R. of China, Taiwan Province of China, North Cyprus et Turkmenistan) n’ont pas pu être associés directement en raison de différences de nomenclature ou de l’absence de données correspondantes dans la base COVID-19.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<div style="text-align:center; font-size:0.85em; color:#888; padding:25px;">
+  <strong>© 2026 NGUYEN Duc Hoang Viet — Tous droits réservés.</strong><br>
+  <strong> Projet COVID-19 Data Analyst using Python</strong><br>
+  Toute reproduction, diffusion ou utilisation sans autorisation est interdite.
+</div>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

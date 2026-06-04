@@ -1,0 +1,229 @@
+---
+title: "Partie 1 Préparation et nettoyage des données"
+author: "NGUYEN Duc Hoang Viet "
+number-sections: true 
+code-fold: false
+execute:
+  python: /Users/nguyenduchoangviet/Documents/github/Projet-Covid-19-Data-Analyst/.venv/bin/python
+  warning: false
+  message: false
+---
+
+# Base de données COVID-19 
+
+## Importation des bibliothèques des COVID-19
+
+```{python}
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+print("Modules are imported.")
+```
+
+## Importation des données
+```{python}
+import os
+
+for dirname, _, filenames in os.walk('Covid-19_from_John_Hopkins_University'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+```
+
+```{python}
+corona_dataset = pd.read_csv("Covid-19_from_John_Hopkins_University/RAW_global_confirmed_cases.csv")
+corona_dataset.head()
+```
+
+## Vérification initiale
+```{python}
+corona_dataset.shape
+```
+
+289 lignes (countries/regions) et 
+1147 colonnes (metadata + dates)
+
+## Nettoyage des données
+
+### Suppression des colonnes inutiles
+```{python}
+corona_dataset_clean = corona_dataset.drop(["Lat", "Long"], axis=1)
+```
+
+### Agrégation par pays
+```{python}
+corona_dataset_aggregated = corona_dataset_clean.groupby('Country/Region').sum()
+# Exportation des données agrégées par pays
+corona_dataset_aggregated.to_csv("data/corona_dataset_aggregated.csv")
+```
+
+### Vérification après agrégation
+```{python}
+corona_dataset_aggregated.shape
+```
+
+### Aperçu des données
+```{python}
+corona_dataset_aggregated.head()
+```
+
+## Vérification des données manquantes
+```{python}
+corona_dataset_aggregated.isnull().sum().sum()
+```
+
+La fonction isnull() est utilisée pour vérifier la présence de valeurs manquantes dans le DataFrame corona_dataset_aggregated. La méthode sum() est appliquée deux fois pour obtenir le nombre total de valeurs manquantes dans l'ensemble du DataFrame. Si le résultat est 0, cela signifie qu'il n'y a aucune valeur manquante dans les données agrégées par pays. Et avec la fonction sum() permet de compter le nombre de valeurs manquantes pour chaque colonne en additionnant les valeurs True (1) et False (0) dans chaque colonne. En appliquant sum() à l'ensemble du DataFrame, on obtient le nombre total de valeurs manquantes dans toutes les colonnes combinées.
+
+Et, on obient np.int64(0) qui indique qu'il n'y a aucune valeur manquante dans le DataFrame corona_dataset_aggregated après l'agrégation par pays. Cela signifie que toutes les données sont complètes et qu'il n'y a pas de valeurs manquantes à traiter dans ce DataFrame agrégé. Par conséquent, on peut procéder à l'analyse des données sans se soucier des valeurs manquantes.
+
+## Vérification des doublons
+```{python}
+corona_dataset_aggregated.duplicated().sum()
+```
+
+la fonction duplicated() qui retoure un table de booléens indiquant si une ligne est un doublon ou non. En appliquant sum() à ce résultat, on obtient le nombre total de lignes dupliquées dans le DataFrame corona_dataset_aggregated. Si le résultat est 0, cela signifie qu'il n'y a aucune ligne dupliquée dans les données agrégées par pays. Cela indique que chaque pays est représenté une seule fois dans le DataFrame, ce qui est important pour garantir l'intégrité des données et éviter les biais dans l'analyse.
+
+
+## Transformation en série temporelle
+```{python}
+covid_clean = corona_dataset_aggregated.copy() # Création d'une copie du DataFrame pour éviter de modifier l'original
+
+covid_clean = covid_clean.drop(columns=["Lat", "Long"], errors="ignore") # Suppression des colonnes "Lat" et "Long" si elles existent, sinon ignorer l'erreur
+
+covid_ts = covid_clean.T # Transposition du DataFrame pour que les dates deviennent les index et les pays deviennent les colonnes
+
+covid_ts.index = pd.to_datetime(covid_ts.index, errors="coerce") # Conversion de l'index en format datetime, en ignorant les erreurs de conversion
+
+covid_ts = covid_ts[~covid_ts.index.isna()] # Suppression des lignes dont l'index n'a pas pu être converti en datetime (si nécessaire)
+
+covid_ts.head()
+```
+
+```{python}
+covid_ts.to_csv("data/covid_timeseries.csv")
+```
+
+Le jeu de données a ensuite été exporté au format CSV afin de faciliter sa réutilisation dans les étapes ultérieures de l'analyse exploratoire des données (EDA) et de garantir la reproductibilité du projet.
+
+# Base de données World Happiness Report 2021
+
+## Importation des données
+
+```{python}
+happiness_report = pd.read_csv("World_Happiness_Report/world-happiness-report-2021.csv")
+happiness_report.head()
+```
+
+## Vérification structure 
+```{python}
+happiness_report.shape
+```
+
+## Nettoyage des données
+
+### Suppression des colonnes inutiles
+```{python}
+happiness_report_clean = happiness_report.drop(["Standard error of ladder score", "upperwhisker", "lowerwhisker"],axis=1)
+```
+
+### Vérification après nettoyage
+```{python}
+happiness_report.shape
+```
+
+## Vérification des données manquantes
+```{python}
+happiness_report_clean.isnull().sum().sum()
+``` 
+
+## Vérification des doublons
+```{python}
+happiness_report_clean.duplicated().sum()
+```
+
+## Aperçu final
+```{python}
+happiness_report_clean.head()
+```
+
+# Préparation pour analyse croisée (COVID vs Happiness)
+
+## Vérification mismatch country names
+```{python}
+set(happiness_report_clean["Country name"]) - set(corona_dataset_aggregated.index)
+```
+
+
+```{python}
+happiness_report_clean.shape
+```
+
+
+
+
+
+
+## Harmonisation des noms de pays
+```{python}
+merged_data = happiness_report_clean.merge(
+    corona_dataset_aggregated,
+    left_on="Country name",
+    right_index=True,
+    how="inner"
+)
+
+merged_data.head()
+```
+
+```{python}
+print("Nombre de pays dans Happiness Report :", len(happiness_report_clean))
+print("Nombre de pays après fusion :", len(merged_data))
+```
+
+## Vérification des incohérences entre les noms de pays
+```{python}
+happiness_report_clean["Country name"] = happiness_report_clean["Country name"].replace({
+    "United States": "US",
+    "South Korea": "Korea, South",
+    "Czech Republic": "Czechia",
+    "Myanmar": "Burma",
+    "Swaziland": "Eswatini",
+    "Ivory Coast": "Cote d'Ivoire",
+    "Palestinian Territories": "West Bank and Gaza"
+})
+
+happiness_report_clean.to_csv("data/happiness_report_clean.csv", index=False)
+
+last_date = corona_dataset_aggregated.columns[-1]
+
+corona_dataset_aggregated["Total Cases"] = corona_dataset_aggregated[last_date]
+
+merged_data = happiness_report_clean.merge(
+    corona_dataset_aggregated,
+    left_on="Country name",
+    right_index=True,
+    how="inner"
+)
+merged_data.to_csv("data/merged_data.csv", index=False)
+merged_data.head()
+
+```
+
+```{python}
+print("Nombre de pays dans Happiness Report :", len(happiness_report_clean))
+print("Nombre de pays après fusion :", len(merged_data))
+```
+
+```{python}
+remaining_mismatch = set(happiness_report_clean["Country name"]) - set(corona_dataset_aggregated.index)
+
+print("Nombre de pays non correspondants :", len(remaining_mismatch))
+print(remaining_mismatch)
+```
+
+```{python}
+print(sorted(remaining_mismatch))
+```
+
+Une analyse des noms de pays a révélé quelques divergences entre les deux bases de données. Après harmonisation des principales correspondances, 145 pays ont pu être fusionnés. Quatre territoires (Hong Kong S.A.R. of China, Taiwan Province of China, North Cyprus et Turkmenistan) n'ont pas pu être associés directement en raison de différences de nomenclature ou de l'absence de données correspondantes dans la base COVID-19.

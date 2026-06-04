@@ -1,0 +1,99 @@
+/* ===== GLOBAL ===== */
+.stApp {
+    background-color: #eef2f7;
+    color: #2c3e50;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.block-container {
+    background-color: #eef2f7;
+    padding: 1.5rem 2.5rem;
+}
+
+/* ===== TITLE ===== */
+h1 {
+    font-family: 'Segoe UI', Arial, sans-serif !important;
+    color: #1a3a6e !important;
+    font-size: 1.7rem !important;
+    font-weight: 700 !important;
+    border-left: 5px solid #1f5fa6;
+    padding-left: 0.8rem;
+    margin-bottom: 1.2rem;
+}
+
+/* ===== SUBHEADERS ===== */
+h2, h3 {
+    font-family: 'Segoe UI', Arial, sans-serif !important;
+    color: #1a3a6e !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    border-bottom: 1px solid #c5d5e8;
+    padding-bottom: 0.3rem;
+}
+
+/* ===== CARDS (mỗi ô chart) ===== */
+[data-testid="column"] {
+    background-color: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #c5d5e8;
+    box-shadow: 0 1px 6px rgba(26, 58, 110, 0.10);
+    padding: 1rem !important;
+}
+
+/* ===== DATAFRAME ===== */
+.stDataFrame thead tr th {
+    background-color: #1a3a6e !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 0.80rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.stDataFrame tbody tr:nth-child(even) {
+    background-color: #e8f0fa !important;
+}
+
+.stDataFrame tbody tr:hover {
+    background-color: #c5d8f0 !important;
+}
+
+.stDataFrame td {
+    color: #2c3e50 !important;
+    font-size: 0.87rem !important;
+    border-color: #c5d5e8 !important;
+}
+
+/* ===== METRIC CARDS ===== */
+[data-testid="stMetric"] {
+    background-color: #ffffff;
+    border-top: 4px solid #1f5fa6;
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 2px 6px rgba(26, 58, 110, 0.10);
+    text-align: center;
+}
+
+[data-testid="stMetricLabel"] {
+    color: #4a6fa5 !important;
+    font-size: 0.78rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+[data-testid="stMetricValue"] {
+    color: #1a3a6e !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+}
+
+/* ===== SIDEBAR ===== */
+[data-testid="stSidebar"] {
+    background-color: #1a3a6e !important;
+}
+
+[data-testid="stSidebar"] * {
+    color: #e8f0fa !important;
+}

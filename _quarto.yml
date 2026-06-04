@@ -1,0 +1,44 @@
+project:
+  type: website
+  output-dir: docs  # pour Github pages
+  
+execute:
+  python: /Users/nguyenduchoangviet/Documents/github/Projet-Covid-19-Data-Analyst/.venv/bin/python
+  
+website:
+  title: "Projet COVID-19 Data Analysis using Python"
+  navbar:
+    background: "#2563eb"
+    left:
+      - href: index.qmd
+        text: Accueil
+      - href: Part1.qmd
+        text: "Préparation et nettoyage "
+      - href: Part2.qmd
+        text: "Analyse exploratoire"
+      - href: Part3.qmd
+        text: "Corrélations et régressions "
+      - href: Part4.qmd
+        text: "Conclusion "
+        
+    right:
+      - icon: github
+        href: https://github.com/Hoangviet1810/Projet-Covid-19-Data-Analyst
+      - text: "Portfolio de Viet"
+        href: https://ndhviet.wixsite.com/hviet-portfolio
+        aria-label: "Portfolio"
+      - icon: linkedin           
+        href: https://www.linkedin.com/in/hoang-viet1810/?isSelfProfile=false
+        aria-label: "LinkedIn"
+      
+
+format:
+  html:
+    theme: flatly
+    css: custom.css
+    toc: true
+    toc-location: right
+    toc-title: "Sur cette page" 
+    code-fold: true
+    embed-resources: false
+    include-after-body: footer.html

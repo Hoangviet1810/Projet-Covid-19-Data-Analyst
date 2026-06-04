@@ -1,0 +1,56 @@
+---
+title: "Partie 4 Conclusion"
+author: "NGUYEN Duc Hoang Viet"
+number-sections: true 
+code-fold: false
+execute:
+  python: /Users/nguyenduchoangviet/Documents/github/Projet-Covid-19-Data-Analyst/.venv/bin/python
+  warning: false
+  message: false
+---
+
+# Conclusion générale
+
+Cette étude a permis d’analyser la relation entre la pandémie de COVID-19 et les indicateurs de bonheur à travers une approche combinant analyse exploratoire des données (EDA), corrélations et régressions linéaires.
+
+## Principaux résultats de l’analyse COVID-19
+
+L’analyse des données relatives au COVID-19 montre que la pandémie a touché différemment les pays selon leur niveau de développement et leur intégration internationale. Les pays les plus riches et les plus connectés ont généralement enregistré un nombre total de cas plus élevé, ainsi que des pics d’infection plus importants.
+
+Cependant, ces résultats ne reflètent pas nécessairement une plus grande vulnérabilité, mais plutôt une meilleure capacité de dépistage, de reporting et une plus forte exposition internationale.
+
+## Principaux résultats de l’analyse du bonheur
+
+L’analyse du World Happiness Report met en évidence des relations fortes et cohérentes entre le score de bonheur et certains facteurs socio-économiques :
+
+- Le PIB par habitant, le soutien social et l’espérance de vie sont les principaux déterminants positifs du bonheur.
+- La liberté de faire des choix de vie a un impact modéré mais significatif.
+- La perception de la corruption est globalement négative pour le bien-être.
+
+Les pays nordiques apparaissent systématiquement parmi les plus heureux, tandis que les pays en situation d’instabilité économique ou politique occupent les dernières positions du classement.
+
+## Corrélations entre COVID-19 et bonheur
+
+L’étude des liens entre COVID-19 et bonheur montre que :
+
+- Le nombre total de cas est positivement associé aux indicateurs de développement.
+- Le taux d’infection maximal est également plus élevé dans les pays développés.
+- Cependant, les variables liées au bonheur n’expliquent pas fortement la dynamique du COVID-19 lorsqu’elles sont utilisées pour prédire le score de bonheur.
+
+## Résultats des modèles de régression
+
+Les modèles de régression confirment ces observations :
+
+- Le modèle expliquant le bonheur présente une faible performance (R² faible), indiquant que le bonheur est un phénomène complexe et multidimensionnel difficile à modéliser de manière linéaire.
+- Le modèle expliquant le taux d’infection maximal obtient de meilleurs résultats (R² ≈ 0.45), montrant une relation plus structurée avec les variables socio-économiques.
+
+## Conclusion finale
+
+En conclusion, cette étude met en évidence deux dynamiques principales :
+
+- Les indicateurs socio-économiques jouent un rôle central dans le niveau de bonheur des populations.
+- Ces mêmes indicateurs sont également liés à la manière dont les pays ont été exposés à la pandémie de COVID-19.
+
+Toutefois, le bonheur reste un concept complexe, influencé par de nombreux facteurs non mesurés dans ce jeu de données. À l’inverse, les phénomènes épidémiologiques présentent des relations plus directement quantifiables avec les variables économiques et sociales.
+
+Cette analyse souligne ainsi l’importance de combiner plusieurs approches statistiques afin de mieux comprendre les interactions entre santé publique, économie et bien-être social.

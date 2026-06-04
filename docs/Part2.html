@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="NGUYEN Duc Hoang Viet">
+
+<title>Partie 2 Analyse exploratoire des données (EDA) – Projet COVID-19 Data Analysis using Python</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-86fbd99215607a29b2a977ca276203cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Projet COVID-19 Data Analysis using Python</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Accueil</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Part1.html"> 
+<span class="menu-text">Préparation et nettoyage</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./Part2.html" aria-current="page"> 
+<span class="menu-text">Analyse exploratoire</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Part3.html"> 
+<span class="menu-text">Corrélations et régressions</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Part4.qmd"> 
+<span class="menu-text">Conclusion</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/Hoangviet1810/Projet-Covid-19-Data-Analyst"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://ndhviet.wixsite.com/hviet-portfolio"> 
+<span class="menu-text">Portfolio de Viet</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/hoang-viet1810/?isSelfProfile=false"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sur cette page</h2>
+   
+  <ul>
+  <li><a href="#analyse-covid-19-globale" id="toc-analyse-covid-19-globale" class="nav-link active" data-scroll-target="#analyse-covid-19-globale"><span class="header-section-number">1</span> Analyse COVID-19 globale</a>
+  <ul class="collapse">
+  <li><a href="#chargement-des-données-préparées" id="toc-chargement-des-données-préparées" class="nav-link" data-scroll-target="#chargement-des-données-préparées"><span class="header-section-number">1.1</span> Chargement des données préparées</a></li>
+  <li><a href="#extraction-des-données-finales-total-cases" id="toc-extraction-des-données-finales-total-cases" class="nav-link" data-scroll-target="#extraction-des-données-finales-total-cases"><span class="header-section-number">1.2</span> Extraction des données finales (total cases)</a></li>
+  <li><a href="#top-pays-les-plus-touchés" id="toc-top-pays-les-plus-touchés" class="nav-link" data-scroll-target="#top-pays-les-plus-touchés"><span class="header-section-number">1.3</span> Top pays les plus touchés</a>
+  <ul class="collapse">
+  <li><a href="#visualisation-des-10-pays-les-plus-touchés" id="toc-visualisation-des-10-pays-les-plus-touchés" class="nav-link" data-scroll-target="#visualisation-des-10-pays-les-plus-touchés"><span class="header-section-number">1.3.1</span> Visualisation des 10 pays les plus touchés</a></li>
+  <li><a href="#visualisation-des-courbes-dévolution-pour-quelques-pays" id="toc-visualisation-des-courbes-dévolution-pour-quelques-pays" class="nav-link" data-scroll-target="#visualisation-des-courbes-dévolution-pour-quelques-pays"><span class="header-section-number">1.3.2</span> Visualisation des courbes d’évolution pour quelques pays</a></li>
+  <li><a href="#calcul-du-taux-dinfection-maximal" id="toc-calcul-du-taux-dinfection-maximal" class="nav-link" data-scroll-target="#calcul-du-taux-dinfection-maximal"><span class="header-section-number">1.3.3</span> Calcul du taux d’infection maximal</a></li>
+  </ul></li>
+  <li><a href="#visualisation-de-lévolution-globale-des-cas-de-covid-19" id="toc-visualisation-de-lévolution-globale-des-cas-de-covid-19" class="nav-link" data-scroll-target="#visualisation-de-lévolution-globale-des-cas-de-covid-19"><span class="header-section-number">1.4</span> Visualisation de l’évolution globale des cas de COVID-19</a></li>
+  <li><a href="#visualisation-de-lévolution-des-nouveaux-cas-quotidiens-à-léchelle-mondiale" id="toc-visualisation-de-lévolution-des-nouveaux-cas-quotidiens-à-léchelle-mondiale" class="nav-link" data-scroll-target="#visualisation-de-lévolution-des-nouveaux-cas-quotidiens-à-léchelle-mondiale"><span class="header-section-number">1.5</span> Visualisation de l’évolution des nouveaux cas quotidiens à l’échelle mondiale</a></li>
+  <li><a href="#visualisation-de-lévolution-des-cas-pour-les-10-pays-les-plus-touchés" id="toc-visualisation-de-lévolution-des-cas-pour-les-10-pays-les-plus-touchés" class="nav-link" data-scroll-target="#visualisation-de-lévolution-des-cas-pour-les-10-pays-les-plus-touchés"><span class="header-section-number">1.6</span> Visualisation de l’évolution des cas pour les 10 pays les plus touchés</a></li>
+  <li><a href="#normalize" id="toc-normalize" class="nav-link" data-scroll-target="#normalize"><span class="header-section-number">1.7</span> Normalize</a></li>
+  </ul></li>
+  <li><a href="#analyse-du-bonheur-mondial" id="toc-analyse-du-bonheur-mondial" class="nav-link" data-scroll-target="#analyse-du-bonheur-mondial"><span class="header-section-number">2</span> Analyse du bonheur mondial</a>
+  <ul class="collapse">
+  <li><a href="#chargement-des-données-préparées-1" id="toc-chargement-des-données-préparées-1" class="nav-link" data-scroll-target="#chargement-des-données-préparées-1"><span class="header-section-number">2.1</span> Chargement des données préparées</a></li>
+  <li><a href="#chargement-des-données-préparées-2" id="toc-chargement-des-données-préparées-2" class="nav-link" data-scroll-target="#chargement-des-données-préparées-2"><span class="header-section-number">2.2</span> Chargement des données préparées</a></li>
+  <li><a href="#analyse-du-bonheur-mondial-1" id="toc-analyse-du-bonheur-mondial-1" class="nav-link" data-scroll-target="#analyse-du-bonheur-mondial-1"><span class="header-section-number">2.3</span> Analyse du bonheur mondial</a></li>
+  <li><a href="#distribution-du-bonheur-mondial" id="toc-distribution-du-bonheur-mondial" class="nav-link" data-scroll-target="#distribution-du-bonheur-mondial"><span class="header-section-number">2.4</span> Distribution du bonheur mondial</a>
+  <ul class="collapse">
+  <li><a href="#bonheur-moyen-par-région" id="toc-bonheur-moyen-par-région" class="nav-link" data-scroll-target="#bonheur-moyen-par-région"><span class="header-section-number">2.4.1</span> Bonheur moyen par région</a></li>
+  </ul></li>
+  <li><a href="#analyse-de-la-perception-de-la-corruption" id="toc-analyse-de-la-perception-de-la-corruption" class="nav-link" data-scroll-target="#analyse-de-la-perception-de-la-corruption"><span class="header-section-number">2.5</span> Analyse de la perception de la corruption</a>
+  <ul class="collapse">
+  <li><a href="#top-10-pays-les-plus-corrompus" id="toc-top-10-pays-les-plus-corrompus" class="nav-link" data-scroll-target="#top-10-pays-les-plus-corrompus"><span class="header-section-number">2.5.1</span> Top 10 pays les plus corrompus</a></li>
+  <li><a href="#top-10-pays-les-moins-corrompus" id="toc-top-10-pays-les-moins-corrompus" class="nav-link" data-scroll-target="#top-10-pays-les-moins-corrompus"><span class="header-section-number">2.5.2</span> Top 10 pays les moins corrompus</a></li>
+  </ul></li>
+  <li><a href="#summary-statistics" id="toc-summary-statistics" class="nav-link" data-scroll-target="#summary-statistics"><span class="header-section-number">2.6</span> Summary statistics</a></li>
+  <li><a href="#corrélations-entre-les-facteurs-de-bonheur" id="toc-corrélations-entre-les-facteurs-de-bonheur" class="nav-link" data-scroll-target="#corrélations-entre-les-facteurs-de-bonheur"><span class="header-section-number">2.7</span> Corrélations entre les facteurs de bonheur</a></li>
+  <li><a href="#relation-entre-le-pib-et-le-bonheur" id="toc-relation-entre-le-pib-et-le-bonheur" class="nav-link" data-scroll-target="#relation-entre-le-pib-et-le-bonheur"><span class="header-section-number">2.8</span> Relation entre le PIB et le bonheur</a></li>
+  <li><a href="#relation-entre-le-soutien-social-et-le-bonheur" id="toc-relation-entre-le-soutien-social-et-le-bonheur" class="nav-link" data-scroll-target="#relation-entre-le-soutien-social-et-le-bonheur"><span class="header-section-number">2.9</span> Relation entre le soutien social et le bonheur</a></li>
+  </ul></li>
+  <li><a href="#jointure-des-données" id="toc-jointure-des-données" class="nav-link" data-scroll-target="#jointure-des-données"><span class="header-section-number">3</span> Jointure des données</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Partie 2 Analyse exploratoire des données (EDA)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>NGUYEN Duc Hoang Viet </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="e589ff61" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="analyse-covid-19-globale" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Analyse COVID-19 globale</h1>
+<section id="chargement-des-données-préparées" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="chargement-des-données-préparées"><span class="header-section-number">1.1</span> Chargement des données préparées</h2>
+<div id="db3bb835" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated <span class="op">=</span> pd.read_csv(<span class="st">"data/corona_dataset_aggregated.csv"</span>,index_col<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Province/State</th>
+<th data-quarto-table-cell-role="th">1/22/20</th>
+<th data-quarto-table-cell-role="th">1/23/20</th>
+<th data-quarto-table-cell-role="th">1/24/20</th>
+<th data-quarto-table-cell-role="th">1/25/20</th>
+<th data-quarto-table-cell-role="th">1/26/20</th>
+<th data-quarto-table-cell-role="th">1/27/20</th>
+<th data-quarto-table-cell-role="th">1/28/20</th>
+<th data-quarto-table-cell-role="th">1/29/20</th>
+<th data-quarto-table-cell-role="th">1/30/20</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">2/28/23</th>
+<th data-quarto-table-cell-role="th">3/1/23</th>
+<th data-quarto-table-cell-role="th">3/2/23</th>
+<th data-quarto-table-cell-role="th">3/3/23</th>
+<th data-quarto-table-cell-role="th">3/4/23</th>
+<th data-quarto-table-cell-role="th">3/5/23</th>
+<th data-quarto-table-cell-role="th">3/6/23</th>
+<th data-quarto-table-cell-role="th">3/7/23</th>
+<th data-quarto-table-cell-role="th">3/8/23</th>
+<th data-quarto-table-cell-role="th">3/9/23</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Country/Region</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Afghanistan</th>
+<td>NaN</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>209322</td>
+<td>209340</td>
+<td>209358</td>
+<td>209362</td>
+<td>209369</td>
+<td>209390</td>
+<td>209406</td>
+<td>209436</td>
+<td>209451</td>
+<td>209451</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Albania</th>
+<td>NaN</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>334391</td>
+<td>334408</td>
+<td>334408</td>
+<td>334427</td>
+<td>334427</td>
+<td>334427</td>
+<td>334427</td>
+<td>334427</td>
+<td>334443</td>
+<td>334457</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Algeria</th>
+<td>NaN</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>271441</td>
+<td>271448</td>
+<td>271463</td>
+<td>271469</td>
+<td>271469</td>
+<td>271477</td>
+<td>271477</td>
+<td>271490</td>
+<td>271494</td>
+<td>271496</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Andorra</th>
+<td>NaN</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>47866</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47875</td>
+<td>47890</td>
+<td>47890</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Angola</th>
+<td>NaN</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>105255</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105277</td>
+<td>105288</td>
+<td>105288</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 1144 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="extraction-des-données-finales-total-cases" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="extraction-des-données-finales-total-cases"><span class="header-section-number">1.2</span> Extraction des données finales (total cases)</h2>
+<div id="9d4e1814" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated[<span class="st">"Total Cases"</span>] <span class="op">=</span> corona_dataset_aggregated.iloc[:, <span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated[<span class="st">"Total Cases"</span>].head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>Country/Region
+Afghanistan    209451
+Albania        334457
+Algeria        271496
+Andorra         47890
+Angola         105288
+Name: Total Cases, dtype: int64</code></pre>
+</div>
+</div>
+<p>La dernière colonne du jeu de données a été utilisée pour représenter le nombre total de cas confirmés de COVID-19 pour chaque pays.</p>
+</section>
+<section id="top-pays-les-plus-touchés" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="top-pays-les-plus-touchés"><span class="header-section-number">1.3</span> Top pays les plus touchés</h2>
+<div id="4b00a553" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>top_countries <span class="op">=</span> corona_dataset_aggregated[<span class="st">"Total Cases"</span>].sort_values(ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>top_countries </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>Country/Region
+US                103802702
+India              44690738
+France             39866718
+Germany            38249060
+Brazil             37076053
+Japan              33320438
+Korea, South       30615522
+Italy              25603510
+United Kingdom     24658705
+Russia             22075858
+Name: Total Cases, dtype: int64</code></pre>
+</div>
+</div>
+<section id="visualisation-des-10-pays-les-plus-touchés" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="visualisation-des-10-pays-les-plus-touchés"><span class="header-section-number">1.3.1</span> Visualisation des 10 pays les plus touchés</h3>
+<div id="3f88fc25" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>top_countries.plot(kind<span class="op">=</span><span class="st">"bar"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Top 10 countries - COVID-19 total cases"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cases"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-6-output-1.png" width="589" height="543" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualisation-des-courbes-dévolution-pour-quelques-pays" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="visualisation-des-courbes-dévolution-pour-quelques-pays"><span class="header-section-number">1.3.2</span> Visualisation des courbes d’évolution pour quelques pays</h3>
+<div id="60c3eb1e" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(corona_dataset_aggregated.dtypes.head())</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated <span class="op">=</span> corona_dataset_aggregated.<span class="bu">apply</span>(pd.to_numeric,errors<span class="op">=</span><span class="st">"coerce"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.loc[<span class="st">"Vietnam"</span>].plot()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.loc[<span class="st">"France"</span>].plot()</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.loc[<span class="st">"US"</span>].plot()</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Province/State      str
+1/22/20           int64
+1/23/20           int64
+1/24/20           int64
+1/25/20           int64
+dtype: object</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-7-output-2.png" width="571" height="425" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Dans cette partie, on visualise l’évolution du nombre total de cas de COVID-19 au fil du temps pour trois pays : le Vietnam, la France et les États-Unis. Les données utilisées sont cumulatives, ce qui signifie qu’elles ne peuvent qu’augmenter ou rester stables, sans jamais diminuer. Cette représentation permet de comparer la propagation de la pandémie entre les pays et d’analyser leurs dynamiques de croissance, afin de mettre en évidence les différences de niveau de contamination ainsi que la tendance globale de l’évolution des cas confirmés dans le temps.</p>
+</section>
+<section id="calcul-du-taux-dinfection-maximal" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="calcul-du-taux-dinfection-maximal"><span class="header-section-number">1.3.3</span> Calcul du taux d’infection maximal</h3>
+<div id="2ddd6329" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.loc[<span class="st">"Vietnam"</span>].diff().plot()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.loc[<span class="st">"France"</span>].diff().plot()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.loc[<span class="st">"US"</span>].diff().plot()</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>plt.legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-8-output-1.png" width="590" height="425" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Dans cette partie, on visualise le nombre de nouveaux cas de COVID-19 par jour pour trois pays : le Vietnam, la France et les États-Unis, en appliquant la méthode de différence (diff) aux données cumulatives. Cette transformation permet de passer du nombre total de cas au nombre de cas journaliers, ce qui met en évidence les variations quotidiennes et les pics de contamination. Ce type de représentation est particulièrement utile pour analyser la dynamique réelle de propagation du virus et comparer l’intensité des vagues épidémiques entre les pays.</p>
+<div id="63d913e3" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>countries <span class="op">=</span> <span class="bu">list</span>(corona_dataset_aggregated.index)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>max_infection_rates <span class="op">=</span> []</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> countries :</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    max_infection_rates.append(corona_dataset_aggregated.loc[c].diff().<span class="bu">max</span>())</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated[<span class="st">"Max infection rate"</span>] <span class="op">=</span> max_infection_rates</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>corona_data <span class="op">=</span> pd.DataFrame(corona_dataset_aggregated[<span class="st">"Max infection rate"</span>])</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>corona_data.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Max infection rate</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Country/Region</th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Afghanistan</th>
+<td>3243.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Albania</th>
+<td>4789.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Algeria</th>
+<td>2521.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Andorra</th>
+<td>2313.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Angola</th>
+<td>5035.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Dans cette partie, on calcule le taux maximal d’infection quotidienne pour chaque pays à partir des données cumulatives de COVID-19. Cette mesure correspond à la plus forte augmentation du nombre de cas confirmés observée en une seule journée, obtenue en appliquant la méthode de différence (diff) puis en sélectionnant la valeur maximale. Cet indicateur permet d’identifier les pics de contamination et de comparer l’intensité des vagues épidémiques entre les pays, indépendamment du nombre total de c</p>
+<div id="e271a59f" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>covid_ts <span class="op">=</span> pd.read_csv(<span class="st">"data/covid_timeseries.csv"</span>,index_col<span class="op">=</span><span class="dv">0</span>,parse_dates<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>covid_ts.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Afghanistan</th>
+<th data-quarto-table-cell-role="th">Albania</th>
+<th data-quarto-table-cell-role="th">Algeria</th>
+<th data-quarto-table-cell-role="th">Andorra</th>
+<th data-quarto-table-cell-role="th">Angola</th>
+<th data-quarto-table-cell-role="th">Antarctica</th>
+<th data-quarto-table-cell-role="th">Antigua and Barbuda</th>
+<th data-quarto-table-cell-role="th">Argentina</th>
+<th data-quarto-table-cell-role="th">Armenia</th>
+<th data-quarto-table-cell-role="th">Australia</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">Uruguay</th>
+<th data-quarto-table-cell-role="th">Uzbekistan</th>
+<th data-quarto-table-cell-role="th">Vanuatu</th>
+<th data-quarto-table-cell-role="th">Venezuela</th>
+<th data-quarto-table-cell-role="th">Vietnam</th>
+<th data-quarto-table-cell-role="th">West Bank and Gaza</th>
+<th data-quarto-table-cell-role="th">Winter Olympics 2022</th>
+<th data-quarto-table-cell-role="th">Yemen</th>
+<th data-quarto-table-cell-role="th">Zambia</th>
+<th data-quarto-table-cell-role="th">Zimbabwe</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2020-01-22</th>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2020-01-23</th>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2020-01-24</th>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2020-01-25</th>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2020-01-26</th>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>4</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 201 columns</p>
+</div>
+</div>
+</div>
+<div id="87813def" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>covid_ts[[<span class="st">"France"</span>, <span class="st">"US"</span>, <span class="st">"Vietnam"</span>]].plot()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Évolution du nombre total de cas de COVID-19 par pays"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Nombre total de cas"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Date"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper left"</span>, bbox_to_anchor<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-11-output-1.png" width="699" height="467" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="64367fc4" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>covid_ts[[<span class="st">"France"</span>, <span class="st">"US"</span>, <span class="st">"Vietnam"</span>]].diff().plot()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Évolution du nombre de nouveaux cas de COVID-19 par pays"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Nombre de nouveaux cas"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Date"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper left"</span>, bbox_to_anchor<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>plt.show()  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-12-output-1.png" width="719" height="481" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="visualisation-de-lévolution-globale-des-cas-de-covid-19" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="visualisation-de-lévolution-globale-des-cas-de-covid-19"><span class="header-section-number">1.4</span> Visualisation de l’évolution globale des cas de COVID-19</h2>
+<div id="1281fedc" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>global_cases <span class="op">=</span> covid_ts.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>global_cases.plot()</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Évolution globale des cas COVID-19"</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-13-output-1.png" width="558" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>L’évolution globale des cas montre plusieurs vagues successives de contamination. On remarque une forte accélération à certaines périodes, suivie de phases de stabilisation. Cela reflète l’impact des différentes vagues pandémiques et des mesures sanitaires prises au niveau mondial.</p>
+</section>
+<section id="visualisation-de-lévolution-des-nouveaux-cas-quotidiens-à-léchelle-mondiale" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="visualisation-de-lévolution-des-nouveaux-cas-quotidiens-à-léchelle-mondiale"><span class="header-section-number">1.5</span> Visualisation de l’évolution des nouveaux cas quotidiens à l’échelle mondiale</h2>
+<div id="aa46ecf3" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>daily_cases <span class="op">=</span> covid_ts.diff()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>daily_cases[<span class="st">"Global"</span>] <span class="op">=</span> daily_cases.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>daily_cases[<span class="st">"Global"</span>].plot()</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Nouveaux cas quotidiens dans le monde"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-14-output-1.png" width="571" height="446" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La transformation en nouveaux cas quotidiens permet de mieux visualiser les pics d’infection. On observe que les données cumulatives masquent la dynamique réelle de propagation du virus.</p>
+</section>
+<section id="visualisation-de-lévolution-des-cas-pour-les-10-pays-les-plus-touchés" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="visualisation-de-lévolution-des-cas-pour-les-10-pays-les-plus-touchés"><span class="header-section-number">1.6</span> Visualisation de l’évolution des cas pour les 10 pays les plus touchés</h2>
+<div id="2dac334a" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>top10 <span class="op">=</span> covid_ts.iloc[<span class="op">-</span><span class="dv">1</span>].sort_values(ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>top10</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>US                103802702
+India              44690738
+France             39866718
+Germany            38249060
+Brazil             37076053
+Japan              33320438
+Korea, South       30615522
+Italy              25603510
+United Kingdom     24658705
+Russia             22075858
+Name: 2023-03-09 00:00:00, dtype: int64</code></pre>
+</div>
+</div>
+</section>
+<section id="normalize" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="normalize"><span class="header-section-number">1.7</span> Normalize</h2>
+<div id="36c2f3e0" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>top_countries <span class="op">=</span> corona_dataset_aggregated[<span class="st">"Total Cases"</span>] <span class="op">\</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    .sort_values(ascending<span class="op">=</span><span class="va">False</span>) <span class="op">\</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    .head(<span class="dv">10</span>) <span class="op">\</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    .index</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>normalized <span class="op">=</span> covid_ts <span class="op">/</span> covid_ts.<span class="bu">max</span>()</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>normalized[top_countries].plot()</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Comparaison normalisée des pays"</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-16-output-1.png" width="571" height="447" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Cette étape consiste à normaliser les séries temporelles afin de faciliter la comparaison entre les pays.</p>
+<p><strong>Signification :</strong><br>
+Les données de cas totaux sont divisées par la valeur maximale observée, ce qui permet de ramener toutes les séries sur une même échelle (entre 0 et 1). Ainsi, les pays ayant les plus grands nombres de cas ne dominent plus visuellement le graphique, et l’on peut comparer plus clairement les tendances relatives entre les pays sélectionnés (top 10 des pays les plus touchés).</p>
+</section>
+</section>
+<section id="analyse-du-bonheur-mondial" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Analyse du bonheur mondial</h1>
+<section id="chargement-des-données-préparées-1" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="chargement-des-données-préparées-1"><span class="header-section-number">2.1</span> Chargement des données préparées</h2>
+<div id="92984b99" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>happiness_report_clean <span class="op">=</span> pd.read_csv(<span class="st">"data/happiness_report_clean.csv"</span>,index_col<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>happiness_report_clean <span class="op">=</span> happiness_report_clean.reset_index()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>happiness_report_clean.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Country name</th>
+<th data-quarto-table-cell-role="th">Regional indicator</th>
+<th data-quarto-table-cell-role="th">Ladder score</th>
+<th data-quarto-table-cell-role="th">Logged GDP per capita</th>
+<th data-quarto-table-cell-role="th">Social support</th>
+<th data-quarto-table-cell-role="th">Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Generosity</th>
+<th data-quarto-table-cell-role="th">Perceptions of corruption</th>
+<th data-quarto-table-cell-role="th">Ladder score in Dystopia</th>
+<th data-quarto-table-cell-role="th">Explained by: Log GDP per capita</th>
+<th data-quarto-table-cell-role="th">Explained by: Social support</th>
+<th data-quarto-table-cell-role="th">Explained by: Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Explained by: Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Explained by: Generosity</th>
+<th data-quarto-table-cell-role="th">Explained by: Perceptions of corruption</th>
+<th data-quarto-table-cell-role="th">Dystopia + residual</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Finland</td>
+<td>Western Europe</td>
+<td>7.842</td>
+<td>10.775</td>
+<td>0.954</td>
+<td>72.0</td>
+<td>0.949</td>
+<td>-0.098</td>
+<td>0.186</td>
+<td>2.43</td>
+<td>1.446</td>
+<td>1.106</td>
+<td>0.741</td>
+<td>0.691</td>
+<td>0.124</td>
+<td>0.481</td>
+<td>3.253</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Denmark</td>
+<td>Western Europe</td>
+<td>7.620</td>
+<td>10.933</td>
+<td>0.954</td>
+<td>72.7</td>
+<td>0.946</td>
+<td>0.030</td>
+<td>0.179</td>
+<td>2.43</td>
+<td>1.502</td>
+<td>1.108</td>
+<td>0.763</td>
+<td>0.686</td>
+<td>0.208</td>
+<td>0.485</td>
+<td>2.868</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Switzerland</td>
+<td>Western Europe</td>
+<td>7.571</td>
+<td>11.117</td>
+<td>0.942</td>
+<td>74.4</td>
+<td>0.919</td>
+<td>0.025</td>
+<td>0.292</td>
+<td>2.43</td>
+<td>1.566</td>
+<td>1.079</td>
+<td>0.816</td>
+<td>0.653</td>
+<td>0.204</td>
+<td>0.413</td>
+<td>2.839</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Iceland</td>
+<td>Western Europe</td>
+<td>7.554</td>
+<td>10.878</td>
+<td>0.983</td>
+<td>73.0</td>
+<td>0.955</td>
+<td>0.160</td>
+<td>0.673</td>
+<td>2.43</td>
+<td>1.482</td>
+<td>1.172</td>
+<td>0.772</td>
+<td>0.698</td>
+<td>0.293</td>
+<td>0.170</td>
+<td>2.967</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Netherlands</td>
+<td>Western Europe</td>
+<td>7.464</td>
+<td>10.932</td>
+<td>0.942</td>
+<td>72.4</td>
+<td>0.913</td>
+<td>0.175</td>
+<td>0.338</td>
+<td>2.43</td>
+<td>1.501</td>
+<td>1.079</td>
+<td>0.753</td>
+<td>0.647</td>
+<td>0.302</td>
+<td>0.384</td>
+<td>2.798</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="chargement-des-données-préparées-2" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="chargement-des-données-préparées-2"><span class="header-section-number">2.2</span> Chargement des données préparées</h2>
+<div id="16698a09" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>happiness_data <span class="op">=</span> happiness_report_clean[[</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Country name"</span>, <span class="st">"Logged GDP per capita"</span>,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Social support"</span>,<span class="st">"Healthy life expectancy"</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Freedom to make life choices"</span>, <span class="st">"Perceptions of corruption"</span>]]</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>happiness_data.set_index(<span class="st">"Country name"</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>happiness_data.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Logged GDP per capita</th>
+<th data-quarto-table-cell-role="th">Social support</th>
+<th data-quarto-table-cell-role="th">Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Perceptions of corruption</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Country name</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Finland</th>
+<td>10.775</td>
+<td>0.954</td>
+<td>72.0</td>
+<td>0.949</td>
+<td>0.186</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Denmark</th>
+<td>10.933</td>
+<td>0.954</td>
+<td>72.7</td>
+<td>0.946</td>
+<td>0.179</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Switzerland</th>
+<td>11.117</td>
+<td>0.942</td>
+<td>74.4</td>
+<td>0.919</td>
+<td>0.292</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Iceland</th>
+<td>10.878</td>
+<td>0.983</td>
+<td>73.0</td>
+<td>0.955</td>
+<td>0.673</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Netherlands</th>
+<td>10.932</td>
+<td>0.942</td>
+<td>72.4</td>
+<td>0.913</td>
+<td>0.338</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="analyse-du-bonheur-mondial-1" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="analyse-du-bonheur-mondial-1"><span class="header-section-number">2.3</span> Analyse du bonheur mondial</h2>
+<div id="c94c22eb" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>top_happy <span class="op">=</span> happiness_report_clean.sort_values(<span class="st">"Ladder score"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>))</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>plt.bar(top_happy[<span class="st">"Country name"</span>], top_happy[<span class="st">"Ladder score"</span>])</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Top 10 countries happiest in the world"</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Happiness score"</span>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-19-output-1.png" width="799" height="489" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Cette visualisation montre les 10 pays les plus heureux au monde selon le score de bonheur (Ladder score). On observe que les pays nordiques dominent largement le classement. Cela suggère que des facteurs comme la stabilité sociale, le revenu élevé et la confiance institutionnelle jouent un rôle important dans le niveau de bonheur.</p>
+<div id="aad16430" class="cell" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>bottom_10 <span class="op">=</span> happiness_report_clean.sort_values(<span class="st">"Ladder score"</span>, ascending<span class="op">=</span><span class="va">True</span>).head(<span class="dv">10</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>plt.bar(bottom_10[<span class="st">"Country name"</span>], bottom_10[<span class="st">"Ladder score"</span>])</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Top 10 pays les moins heureux"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-20-output-1.png" width="571" height="483" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>On observe que les pays les moins heureux sont souvent situés dans des régions en développement ou affectées par l’instabilité économique ou politique. Cela peut indiquer une forte dépendance entre le niveau de développement et le score de bonheur.</p>
+</section>
+<section id="distribution-du-bonheur-mondial" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="distribution-du-bonheur-mondial"><span class="header-section-number">2.4</span> Distribution du bonheur mondial</h2>
+<div id="7c093543" class="cell" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sns.histplot(happiness_report_clean[<span class="st">"Ladder score"</span>], kde<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribution du bonheur mondial"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-21-output-1.png" width="585" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="bonheur-moyen-par-région" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="bonheur-moyen-par-région"><span class="header-section-number">2.4.1</span> Bonheur moyen par région</h3>
+<div id="e7a62364" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>region_happiness <span class="op">=</span> happiness_report_clean.groupby(<span class="st">"Regional indicator"</span>)[<span class="st">"Ladder score"</span>].mean().sort_values()</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>region_happiness.plot(kind<span class="op">=</span><span class="st">"barh"</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Bonheur moyen par région"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-22-output-1.png" width="824" height="432" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="analyse-de-la-perception-de-la-corruption" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="analyse-de-la-perception-de-la-corruption"><span class="header-section-number">2.5</span> Analyse de la perception de la corruption</h2>
+<section id="top-10-pays-les-plus-corrompus" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="top-10-pays-les-plus-corrompus"><span class="header-section-number">2.5.1</span> Top 10 pays les plus corrompus</h3>
+<div id="e7cce71e" class="cell" data-execution_count="22">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>most_corrupt <span class="op">=</span> happiness_report_clean.sort_values(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Perceptions of corruption"</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    ascending<span class="op">=</span><span class="va">False</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>).head(<span class="dv">10</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>))</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>plt.bar(most_corrupt[<span class="st">"Country name"</span>], most_corrupt[<span class="st">"Perceptions of corruption"</span>])</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Top 10 countries with highest perceived corruption"</span>)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Perceptions of corruption (high score = low corruption)"</span>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-23-output-1.png" width="812" height="541" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ce graphique présente les 10 pays ayant les scores de perception de la corruption les plus élevés (proches de 1,0), ce qui indique une forte perception de la corruption au sein de la société.</p>
+<p><strong>Signification :</strong><br>
+Des pays comme la Croatie, la Roumanie, la Bulgarie et l’Afghanistan affichent les niveaux de corruption perçue les plus élevés. Un manque de transparence ainsi qu’une gouvernance faible sont généralement des facteurs qui influencent négativement l’indice de bonheur global de ces nations.</p>
+</section>
+<section id="top-10-pays-les-moins-corrompus" class="level3" data-number="2.5.2">
+<h3 data-number="2.5.2" class="anchored" data-anchor-id="top-10-pays-les-moins-corrompus"><span class="header-section-number">2.5.2</span> Top 10 pays les moins corrompus</h3>
+<div id="437595b3" class="cell" data-execution_count="23">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>least_corrupt <span class="op">=</span> happiness_report_clean.sort_values(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Perceptions of corruption"</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    ascending<span class="op">=</span><span class="va">True</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>).head(<span class="dv">10</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>))</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>plt.bar(least_corrupt[<span class="st">"Country name"</span>], least_corrupt[<span class="st">"Perceptions of corruption"</span>])</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Top 10 countries with lowest perceived corruption"</span>)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Perceptions of corruption (high score = low corruption)"</span>)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-24-output-1.png" width="821" height="489" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ce diagramme en barres présente les 10 pays ayant les scores de perception de la corruption les plus faibles. Selon l’indice utilisé, un score proche de 0 indique une très faible perception de la corruption, ce qui correspond à des pays très transparents.</p>
+<p><strong>Signification :</strong><br>
+Singapour, le Danemark et la Finlande figurent parmi les pays les plus transparents et les moins corrompus au monde. Ces pays se distinguent par une gouvernance efficace et des institutions solides, ce qui constitue souvent un facteur fortement associé à un niveau de bonheur élevé.</p>
+</section>
+</section>
+<section id="summary-statistics" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="summary-statistics"><span class="header-section-number">2.6</span> Summary statistics</h2>
+<div id="0d915aa9" class="cell" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>happiness_report_clean.describe()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Ladder score</th>
+<th data-quarto-table-cell-role="th">Logged GDP per capita</th>
+<th data-quarto-table-cell-role="th">Social support</th>
+<th data-quarto-table-cell-role="th">Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Generosity</th>
+<th data-quarto-table-cell-role="th">Perceptions of corruption</th>
+<th data-quarto-table-cell-role="th">Ladder score in Dystopia</th>
+<th data-quarto-table-cell-role="th">Explained by: Log GDP per capita</th>
+<th data-quarto-table-cell-role="th">Explained by: Social support</th>
+<th data-quarto-table-cell-role="th">Explained by: Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Explained by: Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Explained by: Generosity</th>
+<th data-quarto-table-cell-role="th">Explained by: Perceptions of corruption</th>
+<th data-quarto-table-cell-role="th">Dystopia + residual</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">count</th>
+<td>149.000000</td>
+<td>149.000000</td>
+<td>149.000000</td>
+<td>149.000000</td>
+<td>149.000000</td>
+<td>149.000000</td>
+<td>149.000000</td>
+<td>149.00</td>
+<td>149.000000</td>
+<td>149.000000</td>
+<td>149.000000</td>
+<td>149.000000</td>
+<td>149.000000</td>
+<td>149.000000</td>
+<td>149.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">mean</th>
+<td>5.532839</td>
+<td>9.432208</td>
+<td>0.814745</td>
+<td>64.992799</td>
+<td>0.791597</td>
+<td>-0.015134</td>
+<td>0.727450</td>
+<td>2.43</td>
+<td>0.977161</td>
+<td>0.793315</td>
+<td>0.520161</td>
+<td>0.498711</td>
+<td>0.178047</td>
+<td>0.135141</td>
+<td>2.430329</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">std</th>
+<td>1.073924</td>
+<td>1.158601</td>
+<td>0.114889</td>
+<td>6.762043</td>
+<td>0.113332</td>
+<td>0.150657</td>
+<td>0.179226</td>
+<td>0.00</td>
+<td>0.404740</td>
+<td>0.258871</td>
+<td>0.213019</td>
+<td>0.137888</td>
+<td>0.098270</td>
+<td>0.114361</td>
+<td>0.537645</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">min</th>
+<td>2.523000</td>
+<td>6.635000</td>
+<td>0.463000</td>
+<td>48.478000</td>
+<td>0.382000</td>
+<td>-0.288000</td>
+<td>0.082000</td>
+<td>2.43</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.648000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">25%</th>
+<td>4.852000</td>
+<td>8.541000</td>
+<td>0.750000</td>
+<td>59.802000</td>
+<td>0.718000</td>
+<td>-0.126000</td>
+<td>0.667000</td>
+<td>2.43</td>
+<td>0.666000</td>
+<td>0.647000</td>
+<td>0.357000</td>
+<td>0.409000</td>
+<td>0.105000</td>
+<td>0.060000</td>
+<td>2.138000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">50%</th>
+<td>5.534000</td>
+<td>9.569000</td>
+<td>0.832000</td>
+<td>66.603000</td>
+<td>0.804000</td>
+<td>-0.036000</td>
+<td>0.781000</td>
+<td>2.43</td>
+<td>1.025000</td>
+<td>0.832000</td>
+<td>0.571000</td>
+<td>0.514000</td>
+<td>0.164000</td>
+<td>0.101000</td>
+<td>2.509000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">75%</th>
+<td>6.255000</td>
+<td>10.421000</td>
+<td>0.905000</td>
+<td>69.600000</td>
+<td>0.877000</td>
+<td>0.079000</td>
+<td>0.845000</td>
+<td>2.43</td>
+<td>1.323000</td>
+<td>0.996000</td>
+<td>0.665000</td>
+<td>0.603000</td>
+<td>0.239000</td>
+<td>0.174000</td>
+<td>2.794000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">max</th>
+<td>7.842000</td>
+<td>11.647000</td>
+<td>0.983000</td>
+<td>76.953000</td>
+<td>0.970000</td>
+<td>0.542000</td>
+<td>0.939000</td>
+<td>2.43</td>
+<td>1.751000</td>
+<td>1.172000</td>
+<td>0.897000</td>
+<td>0.716000</td>
+<td>0.541000</td>
+<td>0.547000</td>
+<td>3.482000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="corrélations-entre-les-facteurs-de-bonheur" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="corrélations-entre-les-facteurs-de-bonheur"><span class="header-section-number">2.7</span> Corrélations entre les facteurs de bonheur</h2>
+<div id="6c07da78" class="cell" data-execution_count="25">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sns.heatmap(happiness_data.corr(), annot<span class="op">=</span><span class="va">True</span>, cmap<span class="op">=</span><span class="st">"coolwarm"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Corrélations entre facteurs de bonheur"</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-26-output-1.png" width="726" height="613" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>PIB par habitant (Logged GDP per capita) et Espérance de vie en bonne santé (Healthy life expectancy) : 0.86</strong></p>
+<p><strong>Signification :</strong><br>
+Il s’agit de la corrélation la plus forte du graphique. Les pays ayant un PIB par habitant élevé bénéficient généralement d’un meilleur système de santé et de meilleures conditions de vie, ce qui se traduit par une espérance de vie en bonne santé plus élevée.</p>
+<hr>
+<p><strong>PIB par habitant (Logged GDP per capita) et Soutien social (Social support) : 0.79</strong></p>
+<p><strong>Signification :</strong><br>
+Corrélation forte. Le développement économique va souvent de pair avec une meilleure protection sociale et des politiques de soutien plus efficaces pour les citoyens.</p>
+<hr>
+<p><strong>Soutien social (Social support) et Espérance de vie en bonne santé (Healthy life expectancy) : 0.72</strong></p>
+<p><strong>Signification :</strong><br>
+Corrélation forte. Lorsque les citoyens bénéficient d’un bon soutien de la communauté et de la société, leur santé physique et mentale s’améliore, ce qui contribue à prolonger leur espérance de vie en bonne santé.</p>
+<hr>
+<p><strong>Liberté de faire des choix de vie (Freedom to make life choices)</strong></p>
+<p>Ce facteur présente des corrélations plus modérées par rapport aux trois facteurs précédents :</p>
+<ul>
+<li>Corrélation avec le PIB : 0.43<br>
+</li>
+<li>Corrélation avec le soutien social : 0.48<br>
+</li>
+<li>Corrélation avec l’espérance de vie : 0.46</li>
+</ul>
+<p><strong>Signification :</strong><br>
+La liberté de faire des choix de vie contribue au bonheur, mais elle dépend moins strictement de la richesse du pays ou de l’espérance de vie que les autres facteurs.</p>
+<hr>
+<p>Les corrélations associées à la perception de la corruption sont toutes négatives, ce qui est cohérent puisque, dans ce jeu de données, un score élevé correspond à une corruption plus importante.</p>
+<ul>
+<li><p><strong>Liberté de faire des choix de vie : -0.40</strong><br>
+Corrélation négative modérée : une corruption perçue plus élevée est associée à une moindre liberté de choix.</p></li>
+<li><p><strong>Espérance de vie : -0.36</strong> et <strong>PIB par habitant : -0.34</strong><br>
+Corrélations négatives : les pays plus corrompus tendent à avoir un niveau de richesse et de santé plus faibles.</p></li>
+<li><p><strong>Soutien social : -0.20</strong><br>
+Corrélation négative plus faible, indiquant un impact plus indirect sur le sentiment de soutien social.</p></li>
+</ul>
+</section>
+<section id="relation-entre-le-pib-et-le-bonheur" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="relation-entre-le-pib-et-le-bonheur"><span class="header-section-number">2.8</span> Relation entre le PIB et le bonheur</h2>
+<div id="46197f3f" class="cell" data-execution_count="26">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>happiness_report_clean,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"Logged GDP per capita"</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"Ladder score"</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"GDP vs Happiness"</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-27-output-1.png" width="576" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ce nuage de points (scatter plot) montre une tendance linéaire positive claire entre le PIB par habitant (axe X) et le score de bonheur (Ladder score, axe Y).</p>
+<p><strong>Signification :</strong><br>
+Plus le PIB par habitant d’un pays est élevé, plus le score de bonheur de sa population tend à être élevé. Les pays situés en haut à droite du graphique sont généralement les plus riches et les plus heureux, tandis que ceux en bas à gauche présentent à la fois un PIB faible et un faible niveau de bien-être. Cela confirme la forte corrélation positive (0.86) observée précédemment dans la matrice de corrélation.</p>
+</section>
+<section id="relation-entre-le-soutien-social-et-le-bonheur" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="relation-entre-le-soutien-social-et-le-bonheur"><span class="header-section-number">2.9</span> Relation entre le soutien social et le bonheur</h2>
+<div id="96a57903" class="cell" data-execution_count="27">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>happiness_report_clean,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"Social support"</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"Ladder score"</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Social support vs Happiness"</span>)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Part2_files/figure-html/cell-28-output-1.png" width="579" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ce nuage de points (scatter plot) illustre la relation entre le soutien social (axe X) et le score de bonheur (Ladder score, axe Y). On observe une tendance linéaire positive bien marquée.</p>
+<p><strong>Signification :</strong><br>
+Le soutien social joue un rôle majeur dans le bien-être des populations. Les pays offrant un tissu social fort et un bon système d’entraide (situés vers la droite de l’axe X) affichent des niveaux de bonheur nettement plus élevés. À l’inverse, un faible soutien social est presque systématiquement associé à un score de bonheur inférieur. Cela confirme graphiquement la corrélation positive de 0.72 identifiée précédemment.</p>
+</section>
+</section>
+<section id="jointure-des-données" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Jointure des données</h1>
+<div id="db07a721" class="cell" data-execution_count="28">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>data_merge <span class="op">=</span> corona_data.join(happiness_data, how <span class="op">=</span> <span class="st">'inner'</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>data_merge.to_csv(<span class="st">"data/data_merge.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>data_merge.shape</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>data_merge.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Max infection rate</th>
+<th data-quarto-table-cell-role="th">Logged GDP per capita</th>
+<th data-quarto-table-cell-role="th">Social support</th>
+<th data-quarto-table-cell-role="th">Healthy life expectancy</th>
+<th data-quarto-table-cell-role="th">Freedom to make life choices</th>
+<th data-quarto-table-cell-role="th">Perceptions of corruption</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Country/Region</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Afghanistan</th>
+<td>3243.0</td>
+<td>7.695</td>
+<td>0.463</td>
+<td>52.493</td>
+<td>0.382</td>
+<td>0.924</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Albania</th>
+<td>4789.0</td>
+<td>9.520</td>
+<td>0.697</td>
+<td>68.999</td>
+<td>0.785</td>
+<td>0.901</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Algeria</th>
+<td>2521.0</td>
+<td>9.342</td>
+<td>0.802</td>
+<td>66.005</td>
+<td>0.480</td>
+<td>0.752</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Argentina</th>
+<td>139853.0</td>
+<td>9.962</td>
+<td>0.898</td>
+<td>69.000</td>
+<td>0.828</td>
+<td>0.834</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Armenia</th>
+<td>4388.0</td>
+<td>9.487</td>
+<td>0.799</td>
+<td>67.055</td>
+<td>0.825</td>
+<td>0.629</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<div style="text-align:center; font-size:0.85em; color:#888; padding:25px;">
+  <strong>© 2026 NGUYEN Duc Hoang Viet — Tous droits réservés.</strong><br>
+  <strong> Projet COVID-19 Data Analyst using Python</strong><br>
+  Toute reproduction, diffusion ou utilisation sans autorisation est interdite.
+</div>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

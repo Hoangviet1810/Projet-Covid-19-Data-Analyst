@@ -1,0 +1,265 @@
+---
+title: "Partie 3 Analyse de la relation COVID-19 – Bonheur"
+author: "NGUYEN Duc Hoang Viet"
+number-sections: true 
+code-fold: false
+execute:
+  python: /Users/nguyenduchoangviet/Documents/github/Projet-Covid-19-Data-Analyst/.venv/bin/python
+  warning: false
+  message: false
+---
+
+```{python}
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+```
+
+Cette partie analyse la relation entre la pandémie de COVID-19 et les indicateurs de bonheur afin d’identifier d’éventuelles corrélations entre la situation sanitaire et le bien-être des populations.
+
+# Corrélations entre les indicateurs de bonheur
+
+Cette partie analyse la relation entre la pandémie de COVID-19 et les indicateurs de bonheur en utilisant deux perspectives :
+
+l’exposition globale au COVID-19 (cas totaux)
+l’intensité des vagues épidémiques (pic d’infection)
+
+##  Analyse Analyse Total Cases
+
+###  Chargement des données
+```{python}
+merged_data = pd.read_csv("data/merged_data.csv",index_col=0)
+merged_data.shape
+merged_data.head()
+```
+
+###  Top pays les plus touchés
+```{python}
+merged_data["Total Cases"].sort_values(ascending=False).head(10)
+```
+
+### Transformation logarithmique
+```{python}
+merged_data["log_cases"] = np.log1p(merged_data["Total Cases"])
+```
+Cette transformation permet de réduire l’impact des valeurs extrêmes et de stabiliser les analyses statistiques.
+
+### Classement des pays
+```{python}
+merged_data["cases_rank"] = merged_data["Total Cases"].rank(ascending=False)
+merged_data.sort_values("cases_rank").head()
+```
+
+### Top 10 COVID countries
+```{python}
+merged_data = merged_data.reset_index()
+merged_data.sort_values("Total Cases", ascending=False)[
+         ["Country name", "Total Cases"]
+].head(10)
+``` 
+
+### Relation entre bonheur et COVID-19
+```{python}
+merged_data[["Ladder score", "Total Cases"]].corr()
+plt.scatter(
+    merged_data["Ladder score"],
+    merged_data["log_cases"]
+)
+
+plt.xlabel("Happiness score")
+plt.ylabel("Total COVID cases (log scale)")
+plt.title("Happiness vs COVID cases")
+plt.show()
+```
+
+Ce nuage de points (scatter plot) met en relation le score de bonheur (axe X) et le nombre total de cas de COVID-19 en échelle logarithmique (axe Y). On observe une tendance positive visible entre les deux variables.
+
+**Signification :**  
+De manière contre-intuitive, les pays présentant les scores de bonheur les plus élevés (entre 6 et 8) enregistrent également un nombre total de cas de COVID-19 plus important. Cela s’explique principalement par leur niveau de développement, leur forte connectivité internationale et leur urbanisation élevée. De plus, ces pays disposent de systèmes de santé performants et transparents, permettant un dépistage massif et un enregistrement plus fiable des données, contrairement à de nombreux pays moins développés.
+
+
+## Analyse Max infection rate
+
+On va observer la relation entre le taux d'infection maximal et les indicateurs de bonheur 
+
+###  Chargement des données
+```{python}
+# Calcul des corrélations```{python}
+data_merge = pd.read_csv("data/data_merge.csv",index_col=0)
+data_merge.head()
+```
+
+### Matrice de corrélation
+```{python}
+data_merge_numeric = data_merge.reset_index()
+corr_matrix = data_merge_numeric.corr()
+sns.heatmap(corr_matrix, annot=True)
+```
+
+L’inclusion de la variable *Max infection rate* (taux d’infection maximal) dans la matrice de corrélation met en évidence plusieurs relations intéressantes entre la pandémie et les indicateurs de bien-être.
+
+**Interprétation des résultats :**
+
+- **PIB par habitant (0.34) et espérance de vie (0.32)**  
+  Corrélations positives modérées : les pays plus riches et en meilleure santé ont enregistré des taux d’infection maximaux plus élevés, ce qui peut s’expliquer par une forte connectivité internationale, une urbanisation importante et une meilleure capacité de dépistage.
+
+- **Soutien social (0.23)**  
+  Corrélation positive faible : l’impact du tissu social sur la propagation initiale du virus reste limité et indirect.
+
+- **Liberté de choix (0.04) et corruption (-0.13)**  
+  Corrélations proches de zéro : aucun lien statistiquement significatif n’est observé avec le taux d’infection maximal.
+
+**Conclusion :**  
+La pandémie a davantage touché les pays développés, non pas en raison d’une plus faible résilience, mais en raison de leur forte connectivité internationale et de systèmes de surveillance sanitaire plus efficaces.
+
+## Comparaison des deux approches
+Indicateurs liés au COVID-19
+
+Deux indicateurs différents sont utilisés dans cette analyse :
+
+- **Total Cases** : représente l’exposition globale à la pandémie.  
+- **Max infection rate** : mesure l’intensité maximale des vagues épidémiques.
+
+**Signification :**  
+Ces deux approches sont complémentaires et permettent de mieux comprendre l’impact du COVID-19 sur les indicateurs de bien-être, en distinguant l’ampleur globale de la pandémie et la sévérité des pics d’infection.
+
+
+# Regression 
+
+## Régression linéaire entre le taux d'infection maximal et les indicateurs de bonheur
+```{python}
+fig, axs = plt.subplots(ncols=4, figsize=(20, 5))
+oy = np.log(data_merge_numeric["Max infection rate"])
+sns.regplot(x = data_merge_numeric['Logged GDP per capita'], y = oy , ax=axs[0])
+sns.regplot(x = data_merge_numeric['Social support'], y = oy , ax=axs[1])
+sns.regplot(x = data_merge_numeric['Healthy life expectancy'], y = oy , ax=axs[2])
+sns.regplot(x = data_merge_numeric['Freedom to make life choices'], y = oy , ax=axs[3])
+```
+
+Afin d’étudier plus en détail les relations observées dans la matrice de corrélation, des régressions linéaires simples ont été réalisées entre le logarithme du taux d’infection maximal (*Max infection rate*) et plusieurs indicateurs du World Happiness Report.
+
+L’utilisation du logarithme permet de réduire l’influence des valeurs extrêmes et de mieux visualiser les tendances générales présentes dans les données.
+
+**Analyse des résultats :**
+
+- Une relation positive est observée entre le taux d’infection maximal et le PIB par habitant.
+- Une tendance similaire apparaît avec l’espérance de vie et le soutien social.
+- La relation avec la liberté de faire des choix de vie semble beaucoup plus faible.
+
+Ces résultats confirment les observations obtenues précédemment à partir de la matrice de corrélation : les pays les plus développés ont souvent enregistré des taux d’infection maximaux plus élevés, probablement en raison de leur forte connectivité internationale et de systèmes de surveillance sanitaire plus performants.
+
+## Régression linéaire multiple
+
+### Model 1 
+
+#### Variable cible (Y)
+```{python}
+Y = merged_data["Ladder score"]
+```
+
+#### Variables explicatives (X)
+```{python}
+X = merged_data[["Total Cases", "Logged GDP per capita", "Social support", "Healthy life expectancy", "Freedom to make life choices", "Perceptions of corruption"]]
+```
+
+#### Modèle de régression linéaire multiple
+```{python}
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(X, Y)
+
+print("R² =", model.score(X, Y))
+```
+
+#### Coefficients du modèle
+```{python}
+coef_df = pd.DataFrame({
+    "Variable": X.columns,
+    "Coefficient": model.coef_
+})
+
+coef_df.sort_values(
+    "Coefficient",
+    ascending=False
+)
+```
+
+#### Évaluation
+```{python}
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, Y,
+    test_size=0.2,
+    random_state=42
+)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+pred = model.predict(X_test)
+
+print("R² :", model.score(X_test, y_test))
+print("RMSE :", mean_squared_error(y_test, pred)**0.5)
+```
+
+Le faible R² observé indique que la relation entre les variables explicatives et le score de bonheur n’est pas strictement linéaire. Bien que des corrélations fortes existent individuellement entre certaines variables (PIB, espérance de vie, soutien social), leur combinaison dans un modèle linéaire conduit à un phénomène de redondance (multicolinéarité), réduisant ainsi la capacité explicative globale du modèle.
+
+De plus, l’ajout du nombre total de cas de COVID-19 introduit du bruit plutôt qu’une information explicative pertinente, car cette variable dépend fortement de facteurs externes (population, politique de test, reporting des données) et non directement du bien-être.
+
+#### Graphique réel vs prédit
+```{python}
+plt.scatter(y_test, pred, color="blue", label="Données prédites") 
+
+plt.plot(
+    [y_test.min(), y_test.max()],
+    [y_test.min(), y_test.max()],
+    color="red", linestyle="--", label="Prédiction idéale (y = x)"
+)
+
+plt.xlabel("Ladder score réel")
+plt.ylabel("Ladder score prédit")
+plt.title("Valeurs réelles vs prédites")
+plt.legend() 
+plt.show()
+```
+
+Le graphique montre une forte concentration des points alignés horizontalement autour de la valeur prédite de 5.5, tandis que les valeurs réelles s’étendent de 3.5 à plus de 7. L’écart important entre le nuage de points et la ligne idéale de prédiction ($y = x$) met en évidence les limites du modèle actuel.
+
+---
+
+**$R^2 = 0.149$** : Le coefficient de détermination est très faible. Les variables explicatives utilisées dans ce premier modèle ne permettent d’expliquer qu’environ 15% de la variance du score de bonheur (*Ladder score*). Les 85% restants sont liés à d’autres facteurs non capturés par ce modèle linéaire simple.
+
+**RMSE = 0.926** : L’erreur quadratique moyenne indique qu’en moyenne, les prédictions du modèle s’écartent d’environ 0.93 point par rapport aux valeurs réelles du score de bonheur. Sur une échelle de 0 à 10, cette erreur reste relativement importante.
+
+**Conclusion:**
+
+Ces résultats suggèrent que la relation entre les variables explicatives et le score de bonheur n’est pas parfaitement linéaire, ou que certaines variables introduisent du bruit dans le modèle, notamment celles liées au contexte COVID-19. Une analyse du second modèle permettra de vérifier si une sélection différente de variables améliore la performance globale de la régression.
+
+### Model 2
+```{python}
+from sklearn.linear_model import LinearRegression
+
+X = data_merge_numeric[
+    [
+        'Logged GDP per capita',
+        'Social support',
+        'Healthy life expectancy',
+        'Freedom to make life choices',
+        'Perceptions of corruption'
+    ]
+]
+
+y = np.log(data_merge_numeric["Max infection rate"])
+
+model = LinearRegression()
+model.fit(X, y)
+
+print(model.score(X, y))
+```
+
+Les résultats montrent une différence importante entre les deux modèles. Le modèle expliquant le taux d’infection maximal présente une capacité prédictive modérée (R² ≈ 0.45), tandis que celui expliquant le niveau de bonheur est beaucoup plus faible (R² ≈ 0.05).
+
+Cela s’explique par le fait que les variables socio-économiques utilisées ont une influence plus directe et mesurable sur la propagation du COVID-19 que sur un concept multidimensionnel et subjectif comme le bonheur.

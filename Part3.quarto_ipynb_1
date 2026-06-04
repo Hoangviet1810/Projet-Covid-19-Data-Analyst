@@ -15,7 +15,7 @@
         "  message: false\n",
         "---"
       ],
-      "id": "02531958"
+      "id": "b31fd852"
     },
     {
       "cell_type": "code",
@@ -26,7 +26,7 @@
         "import seaborn as sns\n",
         "import matplotlib.pyplot as plt"
       ],
-      "id": "f870a278",
+      "id": "1cc6536d",
       "execution_count": null,
       "outputs": []
     },
@@ -47,7 +47,7 @@
         "\n",
         "###  Chargement des données"
       ],
-      "id": "952b4d5b"
+      "id": "856e8718"
     },
     {
       "cell_type": "code",
@@ -57,7 +57,7 @@
         "merged_data.shape\n",
         "merged_data.head()"
       ],
-      "id": "243ac4ce",
+      "id": "52b1d479",
       "execution_count": null,
       "outputs": []
     },
@@ -67,7 +67,7 @@
       "source": [
         "###  Top pays les plus touchés"
       ],
-      "id": "600eca48"
+      "id": "d68e68e3"
     },
     {
       "cell_type": "code",
@@ -75,7 +75,7 @@
       "source": [
         "merged_data[\"Total Cases\"].sort_values(ascending=False).head(10)"
       ],
-      "id": "8ad8b68b",
+      "id": "e4073a75",
       "execution_count": null,
       "outputs": []
     },
@@ -85,7 +85,7 @@
       "source": [
         "### Transformation logarithmique"
       ],
-      "id": "a9846235"
+      "id": "07c4b564"
     },
     {
       "cell_type": "code",
@@ -93,7 +93,7 @@
       "source": [
         "merged_data[\"log_cases\"] = np.log1p(merged_data[\"Total Cases\"])"
       ],
-      "id": "12444b1d",
+      "id": "6f96782f",
       "execution_count": null,
       "outputs": []
     },
@@ -105,7 +105,7 @@
         "\n",
         "### Classement des pays"
       ],
-      "id": "b941c44a"
+      "id": "2b8dd051"
     },
     {
       "cell_type": "code",
@@ -114,7 +114,7 @@
         "merged_data[\"cases_rank\"] = merged_data[\"Total Cases\"].rank(ascending=False)\n",
         "merged_data.sort_values(\"cases_rank\").head()"
       ],
-      "id": "d56890ae",
+      "id": "9a9fc880",
       "execution_count": null,
       "outputs": []
     },
@@ -124,7 +124,7 @@
       "source": [
         "### Top 10 COVID countries"
       ],
-      "id": "16b67613"
+      "id": "42c76cae"
     },
     {
       "cell_type": "code",
@@ -135,7 +135,7 @@
         "         [\"Country name\", \"Total Cases\"]\n",
         "].head(10)"
       ],
-      "id": "6004aace",
+      "id": "a050feb5",
       "execution_count": null,
       "outputs": []
     },
@@ -145,7 +145,7 @@
       "source": [
         "### Relation entre bonheur et COVID-19"
       ],
-      "id": "271d1cf7"
+      "id": "479f3cff"
     },
     {
       "cell_type": "code",
@@ -162,7 +162,7 @@
         "plt.title(\"Happiness vs COVID cases\")\n",
         "plt.show()"
       ],
-      "id": "2da32f15",
+      "id": "3a315201",
       "execution_count": null,
       "outputs": []
     },
@@ -182,7 +182,7 @@
         "\n",
         "###  Chargement des données"
       ],
-      "id": "073c5c4f"
+      "id": "9142448f"
     },
     {
       "cell_type": "code",
@@ -192,7 +192,7 @@
         "data_merge = pd.read_csv(\"data/data_merge.csv\",index_col=0)\n",
         "data_merge.head()"
       ],
-      "id": "b96c6e27",
+      "id": "0e13922b",
       "execution_count": null,
       "outputs": []
     },
@@ -202,7 +202,7 @@
       "source": [
         "### Matrice de corrélation"
       ],
-      "id": "fbe69598"
+      "id": "35d0024e"
     },
     {
       "cell_type": "code",
@@ -212,7 +212,7 @@
         "corr_matrix = data_merge_numeric.corr()\n",
         "sns.heatmap(corr_matrix, annot=True)"
       ],
-      "id": "49a1cf4b",
+      "id": "68435639",
       "execution_count": null,
       "outputs": []
     },
@@ -252,7 +252,7 @@
         "\n",
         "## Régression linéaire entre le taux d'infection maximal et les indicateurs de bonheur"
       ],
-      "id": "65a21e93"
+      "id": "6accd006"
     },
     {
       "cell_type": "code",
@@ -265,7 +265,7 @@
         "sns.regplot(x = data_merge_numeric['Healthy life expectancy'], y = oy , ax=axs[2])\n",
         "sns.regplot(x = data_merge_numeric['Freedom to make life choices'], y = oy , ax=axs[3])"
       ],
-      "id": "01f6ff5f",
+      "id": "412373eb",
       "execution_count": null,
       "outputs": []
     },
@@ -291,7 +291,7 @@
         "\n",
         "#### Variable cible (Y)"
       ],
-      "id": "cc250164"
+      "id": "153b9d22"
     },
     {
       "cell_type": "code",
@@ -299,7 +299,7 @@
       "source": [
         "Y = merged_data[\"Ladder score\"]"
       ],
-      "id": "41294cdf",
+      "id": "6ce2a480",
       "execution_count": null,
       "outputs": []
     },
@@ -309,7 +309,7 @@
       "source": [
         "#### Variables explicatives (X)"
       ],
-      "id": "b234396e"
+      "id": "cc23777a"
     },
     {
       "cell_type": "code",
@@ -317,7 +317,7 @@
       "source": [
         "X = merged_data[[\"Total Cases\", \"Logged GDP per capita\", \"Social support\", \"Healthy life expectancy\", \"Freedom to make life choices\", \"Perceptions of corruption\"]]"
       ],
-      "id": "d9fa8d0a",
+      "id": "922bbb9f",
       "execution_count": null,
       "outputs": []
     },
@@ -327,7 +327,7 @@
       "source": [
         "#### Modèle de régression linéaire multiple"
       ],
-      "id": "acc2ac38"
+      "id": "5e1a763b"
     },
     {
       "cell_type": "code",
@@ -339,7 +339,7 @@
         "\n",
         "print(\"R² =\", model.score(X, Y))"
       ],
-      "id": "00ba4a6b",
+      "id": "cea3c817",
       "execution_count": null,
       "outputs": []
     },
@@ -349,7 +349,7 @@
       "source": [
         "#### Coefficients du modèle"
       ],
-      "id": "d431d01c"
+      "id": "a7d22d58"
     },
     {
       "cell_type": "code",
@@ -365,7 +365,7 @@
         "    ascending=False\n",
         ")"
       ],
-      "id": "fa379bd0",
+      "id": "1c5a10f2",
       "execution_count": null,
       "outputs": []
     },
@@ -375,7 +375,7 @@
       "source": [
         "#### Évaluation"
       ],
-      "id": "10ee6128"
+      "id": "a9881f5b"
     },
     {
       "cell_type": "code",
@@ -398,7 +398,7 @@
         "print(\"R² :\", model.score(X_test, y_test))\n",
         "print(\"RMSE :\", mean_squared_error(y_test, pred)**0.5)"
       ],
-      "id": "daec2ea9",
+      "id": "657a002c",
       "execution_count": null,
       "outputs": []
     },
@@ -412,7 +412,7 @@
         "\n",
         "#### Graphique réel vs prédit"
       ],
-      "id": "70a51e50"
+      "id": "a5662d5f"
     },
     {
       "cell_type": "code",
@@ -432,7 +432,7 @@
         "plt.legend() \n",
         "plt.show()"
       ],
-      "id": "54440d8b",
+      "id": "e804ac32",
       "execution_count": null,
       "outputs": []
     },
@@ -454,7 +454,7 @@
         "\n",
         "### Model 2"
       ],
-      "id": "89a98878"
+      "id": "eb189d37"
     },
     {
       "cell_type": "code",
@@ -479,7 +479,7 @@
         "\n",
         "print(model.score(X, y))"
       ],
-      "id": "6a16ca29",
+      "id": "b1470a4a",
       "execution_count": null,
       "outputs": []
     },
@@ -491,7 +491,7 @@
         "\n",
         "Cela s’explique par le fait que les variables socio-économiques utilisées ont une influence plus directe et mesurable sur la propagation du COVID-19 que sur un concept multidimensionnel et subjectif comme le bonheur."
       ],
-      "id": "5ec8d201"
+      "id": "fae4a47e"
     }
   ],
   "metadata": {

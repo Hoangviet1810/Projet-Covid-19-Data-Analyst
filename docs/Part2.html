@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5d64b3fa3f813904df59b65b8d588503.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-86fbd99215607a29b2a977ca276203cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -249,7 +249,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="e589ff61" class="cell" data-execution_count="1">
+<div id="bfa7fecf" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -259,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 data-number="1"><span class="header-section-number">1</span> Analyse COVID-19 globale</h1>
 <section id="chargement-des-données-préparées" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="chargement-des-données-préparées"><span class="header-section-number">1.1</span> Chargement des données préparées</h2>
-<div id="db3bb835" class="cell" data-execution_count="2">
+<div id="48bd4933" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated <span class="op">=</span> pd.read_csv(<span class="st">"data/corona_dataset_aggregated.csv"</span>,index_col<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -448,7 +448,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="extraction-des-données-finales-total-cases" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="extraction-des-données-finales-total-cases"><span class="header-section-number">1.2</span> Extraction des données finales (total cases)</h2>
-<div id="9d4e1814" class="cell" data-execution_count="3">
+<div id="f52d4d73" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated[<span class="st">"Total Cases"</span>] <span class="op">=</span> corona_dataset_aggregated.iloc[:, <span class="op">-</span><span class="dv">1</span>]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated[<span class="st">"Total Cases"</span>].head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -465,7 +465,7 @@ Name: Total Cases, dtype: int64</code></pre>
 </section>
 <section id="top-pays-les-plus-touchés" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="top-pays-les-plus-touchés"><span class="header-section-number">1.3</span> Top pays les plus touchés</h2>
-<div id="4b00a553" class="cell" data-execution_count="4">
+<div id="011bb3bb" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>top_countries <span class="op">=</span> corona_dataset_aggregated[<span class="st">"Total Cases"</span>].sort_values(ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>top_countries </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
@@ -485,7 +485,7 @@ Name: Total Cases, dtype: int64</code></pre>
 </div>
 <section id="visualisation-des-10-pays-les-plus-touchés" class="level3" data-number="1.3.1">
 <h3 data-number="1.3.1" class="anchored" data-anchor-id="visualisation-des-10-pays-les-plus-touchés"><span class="header-section-number">1.3.1</span> Visualisation des 10 pays les plus touchés</h3>
-<div id="3f88fc25" class="cell" data-execution_count="5">
+<div id="6e20067a" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>top_countries.plot(kind<span class="op">=</span><span class="st">"bar"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Top 10 countries - COVID-19 total cases"</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cases"</span>)</span>
@@ -501,7 +501,7 @@ Name: Total Cases, dtype: int64</code></pre>
 </section>
 <section id="visualisation-des-courbes-dévolution-pour-quelques-pays" class="level3" data-number="1.3.2">
 <h3 data-number="1.3.2" class="anchored" data-anchor-id="visualisation-des-courbes-dévolution-pour-quelques-pays"><span class="header-section-number">1.3.2</span> Visualisation des courbes d’évolution pour quelques pays</h3>
-<div id="60c3eb1e" class="cell" data-execution_count="6">
+<div id="8cd11d23" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(corona_dataset_aggregated.dtypes.head())</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated <span class="op">=</span> corona_dataset_aggregated.<span class="bu">apply</span>(pd.to_numeric,errors<span class="op">=</span><span class="st">"coerce"</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.loc[<span class="st">"Vietnam"</span>].plot()</span>
@@ -528,7 +528,7 @@ dtype: object</code></pre>
 </section>
 <section id="calcul-du-taux-dinfection-maximal" class="level3" data-number="1.3.3">
 <h3 data-number="1.3.3" class="anchored" data-anchor-id="calcul-du-taux-dinfection-maximal"><span class="header-section-number">1.3.3</span> Calcul du taux d’infection maximal</h3>
-<div id="2ddd6329" class="cell" data-execution_count="7">
+<div id="b4011937" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.loc[<span class="st">"Vietnam"</span>].diff().plot()</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.loc[<span class="st">"France"</span>].diff().plot()</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>corona_dataset_aggregated.loc[<span class="st">"US"</span>].diff().plot()</span>
@@ -542,7 +542,7 @@ dtype: object</code></pre>
 </div>
 </div>
 <p>Dans cette partie, on visualise le nombre de nouveaux cas de COVID-19 par jour pour trois pays : le Vietnam, la France et les États-Unis, en appliquant la méthode de différence (diff) aux données cumulatives. Cette transformation permet de passer du nombre total de cas au nombre de cas journaliers, ce qui met en évidence les variations quotidiennes et les pics de contamination. Ce type de représentation est particulièrement utile pour analyser la dynamique réelle de propagation du virus et comparer l’intensité des vagues épidémiques entre les pays.</p>
-<div id="63d913e3" class="cell" data-execution_count="8">
+<div id="dab9e6d1" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>countries <span class="op">=</span> <span class="bu">list</span>(corona_dataset_aggregated.index)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>max_infection_rates <span class="op">=</span> []</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> countries :</span>
@@ -593,7 +593,7 @@ dtype: object</code></pre>
 </div>
 </div>
 <p>Dans cette partie, on calcule le taux maximal d’infection quotidienne pour chaque pays à partir des données cumulatives de COVID-19. Cette mesure correspond à la plus forte augmentation du nombre de cas confirmés observée en une seule journée, obtenue en appliquant la méthode de différence (diff) puis en sélectionnant la valeur maximale. Cet indicateur permet d’identifier les pics de contamination et de comparer l’intensité des vagues épidémiques entre les pays, indépendamment du nombre total de c</p>
-<div id="e271a59f" class="cell" data-execution_count="9">
+<div id="ca0a2967" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>covid_ts <span class="op">=</span> pd.read_csv(<span class="st">"data/covid_timeseries.csv"</span>,index_col<span class="op">=</span><span class="dv">0</span>,parse_dates<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>covid_ts.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -756,7 +756,7 @@ dtype: object</code></pre>
 </div>
 </div>
 </div>
-<div id="87813def" class="cell" data-execution_count="10">
+<div id="5196d3fa" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>covid_ts[[<span class="st">"France"</span>, <span class="st">"US"</span>, <span class="st">"Vietnam"</span>]].plot()</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Évolution du nombre total de cas de COVID-19 par pays"</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Nombre total de cas"</span>)</span>
@@ -771,7 +771,7 @@ dtype: object</code></pre>
 </div>
 </div>
 </div>
-<div id="64367fc4" class="cell" data-execution_count="11">
+<div id="23eb1856" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>covid_ts[[<span class="st">"France"</span>, <span class="st">"US"</span>, <span class="st">"Vietnam"</span>]].diff().plot()</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Évolution du nombre de nouveaux cas de COVID-19 par pays"</span>)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Nombre de nouveaux cas"</span>)</span>
@@ -790,7 +790,7 @@ dtype: object</code></pre>
 </section>
 <section id="visualisation-de-lévolution-globale-des-cas-de-covid-19" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="visualisation-de-lévolution-globale-des-cas-de-covid-19"><span class="header-section-number">1.4</span> Visualisation de l’évolution globale des cas de COVID-19</h2>
-<div id="1281fedc" class="cell" data-execution_count="12">
+<div id="9ebc8dec" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>global_cases <span class="op">=</span> covid_ts.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>global_cases.plot()</span>
@@ -808,7 +808,7 @@ dtype: object</code></pre>
 </section>
 <section id="visualisation-de-lévolution-des-nouveaux-cas-quotidiens-à-léchelle-mondiale" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="visualisation-de-lévolution-des-nouveaux-cas-quotidiens-à-léchelle-mondiale"><span class="header-section-number">1.5</span> Visualisation de l’évolution des nouveaux cas quotidiens à l’échelle mondiale</h2>
-<div id="aa46ecf3" class="cell" data-execution_count="13">
+<div id="4de2364a" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>daily_cases <span class="op">=</span> covid_ts.diff()</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>daily_cases[<span class="st">"Global"</span>] <span class="op">=</span> daily_cases.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
@@ -827,7 +827,7 @@ dtype: object</code></pre>
 </section>
 <section id="visualisation-de-lévolution-des-cas-pour-les-10-pays-les-plus-touchés" class="level2" data-number="1.6">
 <h2 data-number="1.6" class="anchored" data-anchor-id="visualisation-de-lévolution-des-cas-pour-les-10-pays-les-plus-touchés"><span class="header-section-number">1.6</span> Visualisation de l’évolution des cas pour les 10 pays les plus touchés</h2>
-<div id="2dac334a" class="cell" data-execution_count="14">
+<div id="d491b8ab" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>top10 <span class="op">=</span> covid_ts.iloc[<span class="op">-</span><span class="dv">1</span>].sort_values(ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>top10</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
@@ -847,7 +847,7 @@ Name: 2023-03-09 00:00:00, dtype: int64</code></pre>
 </section>
 <section id="normalize" class="level2" data-number="1.7">
 <h2 data-number="1.7" class="anchored" data-anchor-id="normalize"><span class="header-section-number">1.7</span> Normalize</h2>
-<div id="36c2f3e0" class="cell" data-execution_count="15">
+<div id="1ce16459" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>top_countries <span class="op">=</span> corona_dataset_aggregated[<span class="st">"Total Cases"</span>] <span class="op">\</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    .sort_values(ascending<span class="op">=</span><span class="va">False</span>) <span class="op">\</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    .head(<span class="dv">10</span>) <span class="op">\</span></span>
@@ -873,7 +873,7 @@ Les données de cas totaux sont divisées par la valeur maximale observée, ce q
 <h1 data-number="2"><span class="header-section-number">2</span> Analyse du bonheur mondial</h1>
 <section id="chargement-des-données-préparées-1" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="chargement-des-données-préparées-1"><span class="header-section-number">2.1</span> Chargement des données préparées</h2>
-<div id="92984b99" class="cell" data-execution_count="16">
+<div id="6f9d6db7" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>happiness_report_clean <span class="op">=</span> pd.read_csv(<span class="st">"data/happiness_report_clean.csv"</span>,index_col<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>happiness_report_clean <span class="op">=</span> happiness_report_clean.reset_index()</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>happiness_report_clean.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1014,7 +1014,7 @@ Les données de cas totaux sont divisées par la valeur maximale observée, ce q
 </section>
 <section id="chargement-des-données-préparées-2" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="chargement-des-données-préparées-2"><span class="header-section-number">2.2</span> Chargement des données préparées</h2>
-<div id="16698a09" class="cell" data-execution_count="17">
+<div id="d957b3cb" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>happiness_data <span class="op">=</span> happiness_report_clean[[</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Country name"</span>, <span class="st">"Logged GDP per capita"</span>,</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Social support"</span>,<span class="st">"Healthy life expectancy"</span>,</span>
@@ -1095,7 +1095,7 @@ Les données de cas totaux sont divisées par la valeur maximale observée, ce q
 </section>
 <section id="analyse-du-bonheur-mondial-1" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="analyse-du-bonheur-mondial-1"><span class="header-section-number">2.3</span> Analyse du bonheur mondial</h2>
-<div id="c94c22eb" class="cell" data-execution_count="18">
+<div id="5036df07" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>top_happy <span class="op">=</span> happiness_report_clean.sort_values(<span class="st">"Ladder score"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>))</span>
@@ -1114,7 +1114,7 @@ Les données de cas totaux sont divisées par la valeur maximale observée, ce q
 </div>
 </div>
 <p>Cette visualisation montre les 10 pays les plus heureux au monde selon le score de bonheur (Ladder score). On observe que les pays nordiques dominent largement le classement. Cela suggère que des facteurs comme la stabilité sociale, le revenu élevé et la confiance institutionnelle jouent un rôle important dans le niveau de bonheur.</p>
-<div id="aad16430" class="cell" data-execution_count="19">
+<div id="cbdd4191" class="cell" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>bottom_10 <span class="op">=</span> happiness_report_clean.sort_values(<span class="st">"Ladder score"</span>, ascending<span class="op">=</span><span class="va">True</span>).head(<span class="dv">10</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>plt.bar(bottom_10[<span class="st">"Country name"</span>], bottom_10[<span class="st">"Ladder score"</span>])</span>
@@ -1133,7 +1133,7 @@ Les données de cas totaux sont divisées par la valeur maximale observée, ce q
 </section>
 <section id="distribution-du-bonheur-mondial" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="distribution-du-bonheur-mondial"><span class="header-section-number">2.4</span> Distribution du bonheur mondial</h2>
-<div id="7c093543" class="cell" data-execution_count="20">
+<div id="d94756dd" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sns.histplot(happiness_report_clean[<span class="st">"Ladder score"</span>], kde<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribution du bonheur mondial"</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1147,7 +1147,7 @@ Les données de cas totaux sont divisées par la valeur maximale observée, ce q
 </div>
 <section id="bonheur-moyen-par-région" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="bonheur-moyen-par-région"><span class="header-section-number">2.4.1</span> Bonheur moyen par région</h3>
-<div id="e7a62364" class="cell" data-execution_count="21">
+<div id="ffdadcd9" class="cell" data-execution_count="21">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>region_happiness <span class="op">=</span> happiness_report_clean.groupby(<span class="st">"Regional indicator"</span>)[<span class="st">"Ladder score"</span>].mean().sort_values()</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>region_happiness.plot(kind<span class="op">=</span><span class="st">"barh"</span>)</span>
@@ -1167,7 +1167,7 @@ Les données de cas totaux sont divisées par la valeur maximale observée, ce q
 <h2 data-number="2.5" class="anchored" data-anchor-id="analyse-de-la-perception-de-la-corruption"><span class="header-section-number">2.5</span> Analyse de la perception de la corruption</h2>
 <section id="top-10-pays-les-plus-corrompus" class="level3" data-number="2.5.1">
 <h3 data-number="2.5.1" class="anchored" data-anchor-id="top-10-pays-les-plus-corrompus"><span class="header-section-number">2.5.1</span> Top 10 pays les plus corrompus</h3>
-<div id="e7cce71e" class="cell" data-execution_count="22">
+<div id="93f10cd3" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>most_corrupt <span class="op">=</span> happiness_report_clean.sort_values(</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Perceptions of corruption"</span>,</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    ascending<span class="op">=</span><span class="va">False</span></span>
@@ -1194,7 +1194,7 @@ Des pays comme la Croatie, la Roumanie, la Bulgarie et l’Afghanistan affichent
 </section>
 <section id="top-10-pays-les-moins-corrompus" class="level3" data-number="2.5.2">
 <h3 data-number="2.5.2" class="anchored" data-anchor-id="top-10-pays-les-moins-corrompus"><span class="header-section-number">2.5.2</span> Top 10 pays les moins corrompus</h3>
-<div id="437595b3" class="cell" data-execution_count="23">
+<div id="d76119ae" class="cell" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>least_corrupt <span class="op">=</span> happiness_report_clean.sort_values(</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Perceptions of corruption"</span>,</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    ascending<span class="op">=</span><span class="va">True</span></span>
@@ -1222,7 +1222,7 @@ Singapour, le Danemark et la Finlande figurent parmi les pays les plus transpare
 </section>
 <section id="summary-statistics" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="summary-statistics"><span class="header-section-number">2.6</span> Summary statistics</h2>
-<div id="0d915aa9" class="cell" data-execution_count="24">
+<div id="bf31d66b" class="cell" data-execution_count="24">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>happiness_report_clean.describe()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="24">
 <div>
@@ -1403,7 +1403,7 @@ Singapour, le Danemark et la Finlande figurent parmi les pays les plus transpare
 </section>
 <section id="corrélations-entre-les-facteurs-de-bonheur" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="corrélations-entre-les-facteurs-de-bonheur"><span class="header-section-number">2.7</span> Corrélations entre les facteurs de bonheur</h2>
-<div id="6c07da78" class="cell" data-execution_count="25">
+<div id="7f26676e" class="cell" data-execution_count="25">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sns.heatmap(happiness_data.corr(), annot<span class="op">=</span><span class="va">True</span>, cmap<span class="op">=</span><span class="st">"coolwarm"</span>)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Corrélations entre facteurs de bonheur"</span>)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1451,7 +1451,7 @@ Corrélation négative plus faible, indiquant un impact plus indirect sur le sen
 </section>
 <section id="relation-entre-le-pib-et-le-bonheur" class="level2" data-number="2.8">
 <h2 data-number="2.8" class="anchored" data-anchor-id="relation-entre-le-pib-et-le-bonheur"><span class="header-section-number">2.8</span> Relation entre le PIB et le bonheur</h2>
-<div id="46197f3f" class="cell" data-execution_count="26">
+<div id="c5edf682" class="cell" data-execution_count="26">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>happiness_report_clean,</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"Logged GDP per capita"</span>,</span>
@@ -1473,7 +1473,7 @@ Plus le PIB par habitant d’un pays est élevé, plus le score de bonheur de sa
 </section>
 <section id="relation-entre-le-soutien-social-et-le-bonheur" class="level2" data-number="2.9">
 <h2 data-number="2.9" class="anchored" data-anchor-id="relation-entre-le-soutien-social-et-le-bonheur"><span class="header-section-number">2.9</span> Relation entre le soutien social et le bonheur</h2>
-<div id="96a57903" class="cell" data-execution_count="27">
+<div id="af1ac19a" class="cell" data-execution_count="27">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>happiness_report_clean,</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"Social support"</span>,</span>
@@ -1496,7 +1496,7 @@ Le soutien social joue un rôle majeur dans le bien-être des populations. Les p
 </section>
 <section id="jointure-des-données" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Jointure des données</h1>
-<div id="db07a721" class="cell" data-execution_count="28">
+<div id="a4a67fc6" class="cell" data-execution_count="28">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>data_merge <span class="op">=</span> corona_data.join(happiness_data, how <span class="op">=</span> <span class="st">'inner'</span>)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>data_merge.to_csv(<span class="st">"data/data_merge.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>data_merge.shape</span>

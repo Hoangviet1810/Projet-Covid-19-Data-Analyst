@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5d64b3fa3f813904df59b65b8d588503.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-86fbd99215607a29b2a977ca276203cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -270,7 +270,7 @@ window.Quarto = {
 </header>
 
 
-<div id="abcaa258" class="cell" data-execution_count="1">
+<div id="45b18079" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -285,11 +285,11 @@ window.Quarto = {
 <h2 data-number="1.1" class="anchored" data-anchor-id="analyse-analyse-total-cases"><span class="header-section-number">1.1</span> Analyse Analyse Total Cases</h2>
 <section id="chargement-des-données" class="level3" data-number="1.1.1">
 <h3 data-number="1.1.1" class="anchored" data-anchor-id="chargement-des-données"><span class="header-section-number">1.1.1</span> Chargement des données</h3>
-<div id="babf09a1" class="cell" data-execution_count="2">
+<div id="25ee7915" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>merged_data <span class="op">=</span> pd.read_csv(<span class="st">"data/merged_data.csv"</span>,index_col<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>merged_data.shape</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>merged_data.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="36">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
@@ -475,9 +475,9 @@ window.Quarto = {
 </section>
 <section id="top-pays-les-plus-touchés" class="level3" data-number="1.1.2">
 <h3 data-number="1.1.2" class="anchored" data-anchor-id="top-pays-les-plus-touchés"><span class="header-section-number">1.1.2</span> Top pays les plus touchés</h3>
-<div id="77e40c6f" class="cell" data-execution_count="3">
+<div id="0dd3d1e5" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>merged_data[<span class="st">"Total Cases"</span>].sort_values(ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="37">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>Country name
 US                103802702
 India              44690738
@@ -495,17 +495,17 @@ Name: Total Cases, dtype: int64</code></pre>
 </section>
 <section id="transformation-logarithmique" class="level3" data-number="1.1.3">
 <h3 data-number="1.1.3" class="anchored" data-anchor-id="transformation-logarithmique"><span class="header-section-number">1.1.3</span> Transformation logarithmique</h3>
-<div id="a8039d57" class="cell" data-execution_count="4">
+<div id="912a8ebd" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>merged_data[<span class="st">"log_cases"</span>] <span class="op">=</span> np.log1p(merged_data[<span class="st">"Total Cases"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Cette transformation permet de réduire l’impact des valeurs extrêmes et de stabiliser les analyses statistiques.</p>
 </section>
 <section id="classement-des-pays" class="level3" data-number="1.1.4">
 <h3 data-number="1.1.4" class="anchored" data-anchor-id="classement-des-pays"><span class="header-section-number">1.1.4</span> Classement des pays</h3>
-<div id="b2b5268a" class="cell" data-execution_count="5">
+<div id="1ca2e03d" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>merged_data[<span class="st">"cases_rank"</span>] <span class="op">=</span> merged_data[<span class="st">"Total Cases"</span>].rank(ascending<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>merged_data.sort_values(<span class="st">"cases_rank"</span>).head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="39">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
@@ -691,12 +691,12 @@ Name: Total Cases, dtype: int64</code></pre>
 </section>
 <section id="top-10-covid-countries" class="level3" data-number="1.1.5">
 <h3 data-number="1.1.5" class="anchored" data-anchor-id="top-10-covid-countries"><span class="header-section-number">1.1.5</span> Top 10 COVID countries</h3>
-<div id="e0137f28" class="cell" data-execution_count="6">
+<div id="8bea80ba" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>merged_data <span class="op">=</span> merged_data.reset_index()</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>merged_data.sort_values(<span class="st">"Total Cases"</span>, ascending<span class="op">=</span><span class="va">False</span>)[</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>         [<span class="st">"Country name"</span>, <span class="st">"Total Cases"</span>]</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>].head(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="40">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 
 
@@ -768,7 +768,7 @@ Name: Total Cases, dtype: int64</code></pre>
 </section>
 <section id="relation-entre-bonheur-et-covid-19" class="level3" data-number="1.1.6">
 <h3 data-number="1.1.6" class="anchored" data-anchor-id="relation-entre-bonheur-et-covid-19"><span class="header-section-number">1.1.6</span> Relation entre bonheur et COVID-19</h3>
-<div id="511e4371" class="cell" data-execution_count="7">
+<div id="e49e3a13" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>merged_data[[<span class="st">"Ladder score"</span>, <span class="st">"Total Cases"</span>]].corr()</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    merged_data[<span class="st">"Ladder score"</span>],</span>
@@ -797,11 +797,11 @@ De manière contre-intuitive, les pays présentant les scores de bonheur les plu
 <p>On va observer la relation entre le taux d’infection maximal et les indicateurs de bonheur</p>
 <section id="chargement-des-données-1" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="chargement-des-données-1"><span class="header-section-number">1.2.1</span> Chargement des données</h3>
-<div id="dc5a3be5" class="cell" data-execution_count="8">
+<div id="964f5612" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul des corrélations```{python}</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>data_merge <span class="op">=</span> pd.read_csv(<span class="st">"data/data_merge.csv"</span>,index_col<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>data_merge.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="42">
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
@@ -874,7 +874,7 @@ De manière contre-intuitive, les pays présentant les scores de bonheur les plu
 </section>
 <section id="matrice-de-corrélation" class="level3" data-number="1.2.2">
 <h3 data-number="1.2.2" class="anchored" data-anchor-id="matrice-de-corrélation"><span class="header-section-number">1.2.2</span> Matrice de corrélation</h3>
-<div id="d40891b4" class="cell" data-execution_count="9">
+<div id="92389847" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data_merge_numeric <span class="op">=</span> data_merge.reset_index()</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="op">=</span> data_merge_numeric.corr()</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>sns.heatmap(corr_matrix, annot<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -917,7 +917,7 @@ Ces deux approches sont complémentaires et permettent de mieux comprendre l’i
 <h1 data-number="2"><span class="header-section-number">2</span> Regression</h1>
 <section id="régression-linéaire-entre-le-taux-dinfection-maximal-et-les-indicateurs-de-bonheur" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="régression-linéaire-entre-le-taux-dinfection-maximal-et-les-indicateurs-de-bonheur"><span class="header-section-number">2.1</span> Régression linéaire entre le taux d’infection maximal et les indicateurs de bonheur</h2>
-<div id="a7e08026" class="cell" data-execution_count="10">
+<div id="e76578c4" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(ncols<span class="op">=</span><span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">5</span>))</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>oy <span class="op">=</span> np.log(data_merge_numeric[<span class="st">"Max infection rate"</span>])</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>sns.regplot(x <span class="op">=</span> data_merge_numeric[<span class="st">'Logged GDP per capita'</span>], y <span class="op">=</span> oy , ax<span class="op">=</span>axs[<span class="dv">0</span>])</span>
@@ -948,19 +948,19 @@ Ces deux approches sont complémentaires et permettent de mieux comprendre l’i
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="model-1"><span class="header-section-number">2.2.1</span> Model 1</h3>
 <section id="variable-cible-y" class="level4" data-number="2.2.1.1">
 <h4 data-number="2.2.1.1" class="anchored" data-anchor-id="variable-cible-y"><span class="header-section-number">2.2.1.1</span> Variable cible (Y)</h4>
-<div id="b64b0269" class="cell" data-execution_count="11">
+<div id="5d8147bf" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> merged_data[<span class="st">"Ladder score"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="variables-explicatives-x" class="level4" data-number="2.2.1.2">
 <h4 data-number="2.2.1.2" class="anchored" data-anchor-id="variables-explicatives-x"><span class="header-section-number">2.2.1.2</span> Variables explicatives (X)</h4>
-<div id="becf0db5" class="cell" data-execution_count="12">
+<div id="bdf50b11" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> merged_data[[<span class="st">"Total Cases"</span>, <span class="st">"Logged GDP per capita"</span>, <span class="st">"Social support"</span>, <span class="st">"Healthy life expectancy"</span>, <span class="st">"Freedom to make life choices"</span>, <span class="st">"Perceptions of corruption"</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="modèle-de-régression-linéaire-multiple" class="level4" data-number="2.2.1.3">
 <h4 data-number="2.2.1.3" class="anchored" data-anchor-id="modèle-de-régression-linéaire-multiple"><span class="header-section-number">2.2.1.3</span> Modèle de régression linéaire multiple</h4>
-<div id="2c362e34" class="cell" data-execution_count="13">
+<div id="12e825a1" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LinearRegression()</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>model.fit(X, Y)</span>
@@ -973,7 +973,7 @@ Ces deux approches sont complémentaires et permettent de mieux comprendre l’i
 </section>
 <section id="coefficients-du-modèle" class="level4" data-number="2.2.1.4">
 <h4 data-number="2.2.1.4" class="anchored" data-anchor-id="coefficients-du-modèle"><span class="header-section-number">2.2.1.4</span> Coefficients du modèle</h4>
-<div id="c7cc0a57" class="cell" data-execution_count="14">
+<div id="f1f43876" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>coef_df <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Variable"</span>: X.columns,</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Coefficient"</span>: model.coef_</span>
@@ -983,7 +983,7 @@ Ces deux approches sont complémentaires et permettent de mieux comprendre l’i
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Coefficient"</span>,</span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    ascending<span class="op">=</span><span class="va">False</span></span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="48">
+<div class="cell-output cell-output-display" data-execution_count="14">
 <div>
 
 
@@ -1035,7 +1035,7 @@ Ces deux approches sont complémentaires et permettent de mieux comprendre l’i
 </section>
 <section id="évaluation" class="level4" data-number="2.2.1.5">
 <h4 data-number="2.2.1.5" class="anchored" data-anchor-id="évaluation"><span class="header-section-number">2.2.1.5</span> Évaluation</h4>
-<div id="2eafc669" class="cell" data-execution_count="15">
+<div id="f8d8f38e" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1062,7 +1062,7 @@ RMSE : 0.925932992971965</code></pre>
 </section>
 <section id="graphique-réel-vs-prédit" class="level4" data-number="2.2.1.6">
 <h4 data-number="2.2.1.6" class="anchored" data-anchor-id="graphique-réel-vs-prédit"><span class="header-section-number">2.2.1.6</span> Graphique réel vs prédit</h4>
-<div id="d320488d" class="cell" data-execution_count="16">
+<div id="460974ce" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>plt.scatter(y_test, pred, color<span class="op">=</span><span class="st">"blue"</span>, label<span class="op">=</span><span class="st">"Données prédites"</span>) </span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>plt.plot(</span>
@@ -1094,7 +1094,7 @@ RMSE : 0.925932992971965</code></pre>
 </section>
 <section id="model-2" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="model-2"><span class="header-section-number">2.2.2</span> Model 2</h3>
-<div id="cfe81630" class="cell" data-execution_count="17">
+<div id="e047e94e" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> data_merge_numeric[</span>

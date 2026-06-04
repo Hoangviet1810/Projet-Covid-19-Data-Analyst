@@ -1,0 +1,732 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Partie 2 Analyse exploratoire des données (EDA)\"\n",
+        "author: \"NGUYEN Duc Hoang Viet\"\n",
+        "number-sections: true \n",
+        "code-fold: false\n",
+        "execute:\n",
+        "  python: /Users/nguyenduchoangviet/Documents/github/Projet-Covid-19-Data-Analyst/.venv/bin/python\n",
+        "  warning: false\n",
+        "  message: false\n",
+        "---"
+      ],
+      "id": "30fa50d8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import seaborn as sns\n",
+        "import matplotlib.pyplot as plt"
+      ],
+      "id": "97134972",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "# Analyse COVID-19 globale\n",
+        "\n",
+        "## Chargement des données préparées"
+      ],
+      "id": "352989ab"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "corona_dataset_aggregated = pd.read_csv(\"data/corona_dataset_aggregated.csv\",index_col=0)\n",
+        "corona_dataset_aggregated.head()"
+      ],
+      "id": "a18c50d0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Extraction des données finales (total cases)"
+      ],
+      "id": "79008690"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "corona_dataset_aggregated[\"Total Cases\"] = corona_dataset_aggregated.iloc[:, -1]\n",
+        "corona_dataset_aggregated[\"Total Cases\"].head()"
+      ],
+      "id": "361ec2ac",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "La dernière colonne du jeu de données a été utilisée pour représenter le nombre total de cas confirmés de COVID-19 pour chaque pays.\n",
+        "\n",
+        "## Top pays les plus touchés"
+      ],
+      "id": "a4e33b57"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "top_countries = corona_dataset_aggregated[\"Total Cases\"].sort_values(ascending=False).head(10)\n",
+        "top_countries "
+      ],
+      "id": "fc6d6f25",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Visualisation des 10 pays les plus touchés"
+      ],
+      "id": "7c5600b2"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "top_countries.plot(kind=\"bar\")\n",
+        "plt.title(\"Top 10 countries - COVID-19 total cases\")\n",
+        "plt.ylabel(\"Cases\")\n",
+        "plt.show()"
+      ],
+      "id": "086312bc",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Visualisation des courbes d'évolution pour quelques pays"
+      ],
+      "id": "e7931f98"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "print(corona_dataset_aggregated.dtypes.head())\n",
+        "corona_dataset_aggregated = corona_dataset_aggregated.apply(pd.to_numeric,errors=\"coerce\")\n",
+        "corona_dataset_aggregated.loc[\"Vietnam\"].plot()\n",
+        "corona_dataset_aggregated.loc[\"France\"].plot()\n",
+        "corona_dataset_aggregated.loc[\"US\"].plot()\n",
+        "plt.legend()"
+      ],
+      "id": "ee4fad7b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Dans cette partie, on visualise l’évolution du nombre total de cas de COVID-19 au fil du temps pour trois pays : le Vietnam, la France et les États-Unis. Les données utilisées sont cumulatives, ce qui signifie qu’elles ne peuvent qu’augmenter ou rester stables, sans jamais diminuer. Cette représentation permet de comparer la propagation de la pandémie entre les pays et d’analyser leurs dynamiques de croissance, afin de mettre en évidence les différences de niveau de contamination ainsi que la tendance globale de l’évolution des cas confirmés dans le temps.\n",
+        "\n",
+        "### Calcul du taux d’infection maximal"
+      ],
+      "id": "6eef388b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "corona_dataset_aggregated.loc[\"Vietnam\"].diff().plot()\n",
+        "corona_dataset_aggregated.loc[\"France\"].diff().plot()\n",
+        "corona_dataset_aggregated.loc[\"US\"].diff().plot()\n",
+        "plt.legend()"
+      ],
+      "id": "4a2109f7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Dans cette partie, on visualise le nombre de nouveaux cas de COVID-19 par jour pour trois pays : le Vietnam, la France et les États-Unis, en appliquant la méthode de différence (diff) aux données cumulatives. Cette transformation permet de passer du nombre total de cas au nombre de cas journaliers, ce qui met en évidence les variations quotidiennes et les pics de contamination. Ce type de représentation est particulièrement utile pour analyser la dynamique réelle de propagation du virus et comparer l’intensité des vagues épidémiques entre les pays.\n"
+      ],
+      "id": "7c9208a4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "countries = list(corona_dataset_aggregated.index)\n",
+        "max_infection_rates = []\n",
+        "for c in countries :\n",
+        "    max_infection_rates.append(corona_dataset_aggregated.loc[c].diff().max())\n",
+        "corona_dataset_aggregated[\"Max infection rate\"] = max_infection_rates\n",
+        "corona_data = pd.DataFrame(corona_dataset_aggregated[\"Max infection rate\"])\n",
+        "corona_data.head()"
+      ],
+      "id": "08edd8fc",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Dans cette partie, on calcule le taux maximal d’infection quotidienne pour chaque pays à partir des données cumulatives de COVID-19. Cette mesure correspond à la plus forte augmentation du nombre de cas confirmés observée en une seule journée, obtenue en appliquant la méthode de différence (diff) puis en sélectionnant la valeur maximale. Cet indicateur permet d’identifier les pics de contamination et de comparer l’intensité des vagues épidémiques entre les pays, indépendamment du nombre total de c\n"
+      ],
+      "id": "6a952f9d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "covid_ts = pd.read_csv(\"data/covid_timeseries.csv\",index_col=0,parse_dates=True)\n",
+        "\n",
+        "covid_ts.head()"
+      ],
+      "id": "ade57d03",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "covid_ts[[\"France\", \"US\", \"Vietnam\"]].plot()\n",
+        "plt.title(\"Évolution du nombre total de cas de COVID-19 par pays\")\n",
+        "plt.ylabel(\"Nombre total de cas\")\n",
+        "plt.xlabel(\"Date\")\n",
+        "plt.legend(loc=\"upper left\", bbox_to_anchor=(1, 1))\n",
+        "plt.show()"
+      ],
+      "id": "a64f3b1d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "covid_ts[[\"France\", \"US\", \"Vietnam\"]].diff().plot()\n",
+        "plt.title(\"Évolution du nombre de nouveaux cas de COVID-19 par pays\")\n",
+        "plt.ylabel(\"Nombre de nouveaux cas\")\n",
+        "plt.xlabel(\"Date\")\n",
+        "plt.legend(loc=\"upper left\", bbox_to_anchor=(1, 1))\n",
+        "plt.show()  "
+      ],
+      "id": "8a214900",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Visualisation de l’évolution globale des cas de COVID-19"
+      ],
+      "id": "dace306d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "global_cases = covid_ts.sum(axis=1)\n",
+        "\n",
+        "global_cases.plot()\n",
+        "plt.title(\"Évolution globale des cas COVID-19\")\n",
+        "plt.show()"
+      ],
+      "id": "51b72ac6",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "L’évolution globale des cas montre plusieurs vagues successives de contamination.\n",
+        "On remarque une forte accélération à certaines périodes, suivie de phases de stabilisation.\n",
+        "Cela reflète l’impact des différentes vagues pandémiques et des mesures sanitaires prises au niveau mondial.\n",
+        "\n",
+        "## Visualisation de l’évolution des nouveaux cas quotidiens à l’échelle mondiale"
+      ],
+      "id": "7cc0ff51"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "daily_cases = covid_ts.diff()\n",
+        "\n",
+        "daily_cases[\"Global\"] = daily_cases.sum(axis=1)\n",
+        "daily_cases[\"Global\"].plot()\n",
+        "plt.title(\"Nouveaux cas quotidiens dans le monde\")\n",
+        "plt.show()"
+      ],
+      "id": "316e6f17",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "La transformation en nouveaux cas quotidiens permet de mieux visualiser les pics d’infection.\n",
+        "On observe que les données cumulatives masquent la dynamique réelle de propagation du virus.\n",
+        "\n",
+        "## Visualisation de l’évolution des cas pour les 10 pays les plus touchés"
+      ],
+      "id": "ee8fcde2"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "top10 = covid_ts.iloc[-1].sort_values(ascending=False).head(10)\n",
+        "top10"
+      ],
+      "id": "b1b52d57",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Normalize "
+      ],
+      "id": "e64dee09"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "top_countries = corona_dataset_aggregated[\"Total Cases\"] \\\n",
+        "    .sort_values(ascending=False) \\\n",
+        "    .head(10) \\\n",
+        "    .index\n",
+        "normalized = covid_ts / covid_ts.max()\n",
+        "normalized[top_countries].plot()\n",
+        "plt.title(\"Comparaison normalisée des pays\")\n",
+        "plt.show()"
+      ],
+      "id": "d9091e21",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Cette étape consiste à normaliser les séries temporelles afin de faciliter la comparaison entre les pays.\n",
+        "\n",
+        "**Signification :**  \n",
+        "Les données de cas totaux sont divisées par la valeur maximale observée, ce qui permet de ramener toutes les séries sur une même échelle (entre 0 et 1). Ainsi, les pays ayant les plus grands nombres de cas ne dominent plus visuellement le graphique, et l’on peut comparer plus clairement les tendances relatives entre les pays sélectionnés (top 10 des pays les plus touchés).\n",
+        "\n",
+        "\n",
+        "# Analyse du bonheur mondial\n",
+        "\n",
+        "## Chargement des données préparées"
+      ],
+      "id": "713e9144"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "happiness_report_clean = pd.read_csv(\"data/happiness_report_clean.csv\",index_col=0)\n",
+        "happiness_report_clean = happiness_report_clean.reset_index()\n",
+        "happiness_report_clean.head()"
+      ],
+      "id": "30630986",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Chargement des données préparées"
+      ],
+      "id": "6d15508b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "happiness_data = happiness_report_clean[[\n",
+        "    \"Country name\", \"Logged GDP per capita\",\n",
+        "    \"Social support\",\"Healthy life expectancy\",\n",
+        "    \"Freedom to make life choices\", \"Perceptions of corruption\"]]\n",
+        "\n",
+        "happiness_data.set_index(\"Country name\", inplace=True)\n",
+        "happiness_data.head()"
+      ],
+      "id": "9e2d1561",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Analyse du bonheur mondial"
+      ],
+      "id": "a635ebf7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "top_happy = happiness_report_clean.sort_values(\"Ladder score\", ascending=False).head(10)\n",
+        "\n",
+        "plt.figure(figsize=(10,5))\n",
+        "plt.bar(top_happy[\"Country name\"], top_happy[\"Ladder score\"])\n",
+        "\n",
+        "plt.title(\"Top 10 countries happiest in the world\")\n",
+        "plt.ylabel(\"Happiness score\")\n",
+        "plt.xticks(rotation=45)\n",
+        "plt.show()"
+      ],
+      "id": "aa1bcf6d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Cette visualisation montre les 10 pays les plus heureux au monde selon le score de bonheur (Ladder score).\n",
+        "On observe que les pays nordiques dominent largement le classement.\n",
+        "Cela suggère que des facteurs comme la stabilité sociale, le revenu élevé et la confiance institutionnelle jouent un rôle important dans le niveau de bonheur."
+      ],
+      "id": "18843737"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "bottom_10 = happiness_report_clean.sort_values(\"Ladder score\", ascending=True).head(10)\n",
+        "\n",
+        "plt.bar(bottom_10[\"Country name\"], bottom_10[\"Ladder score\"])\n",
+        "plt.title(\"Top 10 pays les moins heureux\")\n",
+        "plt.xticks(rotation=45)\n",
+        "plt.show()"
+      ],
+      "id": "970d9f17",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "On observe que les pays les moins heureux sont souvent situés dans des régions en développement ou affectées par l’instabilité économique ou politique.\n",
+        "Cela peut indiquer une forte dépendance entre le niveau de développement et le score de bonheur.\n",
+        "\n",
+        "\n",
+        "## Distribution du bonheur mondial"
+      ],
+      "id": "87a33212"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "sns.histplot(happiness_report_clean[\"Ladder score\"], kde=True)\n",
+        "plt.title(\"Distribution du bonheur mondial\")\n",
+        "plt.show()"
+      ],
+      "id": "c4a7b534",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Bonheur moyen par région"
+      ],
+      "id": "071eeea5"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "region_happiness = happiness_report_clean.groupby(\"Regional indicator\")[\"Ladder score\"].mean().sort_values()\n",
+        "\n",
+        "region_happiness.plot(kind=\"barh\")\n",
+        "plt.title(\"Bonheur moyen par région\")\n",
+        "plt.show()"
+      ],
+      "id": "5705e3cb",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Analyse de la perception de la corruption\n",
+        "\n",
+        "### Top 10 pays les plus corrompus"
+      ],
+      "id": "06bbec2f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "most_corrupt = happiness_report_clean.sort_values(\n",
+        "    \"Perceptions of corruption\",\n",
+        "    ascending=False\n",
+        ").head(10)\n",
+        "\n",
+        "plt.figure(figsize=(10,5))\n",
+        "plt.bar(most_corrupt[\"Country name\"], most_corrupt[\"Perceptions of corruption\"])\n",
+        "\n",
+        "plt.title(\"Top 10 countries with highest perceived corruption\")\n",
+        "plt.ylabel(\"Perceptions of corruption (high score = low corruption)\")\n",
+        "plt.xticks(rotation=45)\n",
+        "plt.show()"
+      ],
+      "id": "e4b9d579",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Ce graphique présente les 10 pays ayant les scores de perception de la corruption les plus élevés (proches de 1,0), ce qui indique une forte perception de la corruption au sein de la société.\n",
+        "\n",
+        "**Signification :**  \n",
+        "Des pays comme la Croatie, la Roumanie, la Bulgarie et l’Afghanistan affichent les niveaux de corruption perçue les plus élevés. Un manque de transparence ainsi qu’une gouvernance faible sont généralement des facteurs qui influencent négativement l’indice de bonheur global de ces nations.\n",
+        "\n",
+        "\n",
+        "### Top 10 pays les moins corrompus"
+      ],
+      "id": "a7f8ab5b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "least_corrupt = happiness_report_clean.sort_values(\n",
+        "    \"Perceptions of corruption\",\n",
+        "    ascending=True\n",
+        ").head(10)\n",
+        "\n",
+        "plt.figure(figsize=(10,5))\n",
+        "plt.bar(least_corrupt[\"Country name\"], least_corrupt[\"Perceptions of corruption\"])\n",
+        "\n",
+        "plt.title(\"Top 10 countries with lowest perceived corruption\")\n",
+        "plt.ylabel(\"Perceptions of corruption (high score = low corruption)\")\n",
+        "plt.xticks(rotation=45)\n",
+        "plt.show()"
+      ],
+      "id": "9c92f699",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Ce diagramme en barres présente les 10 pays ayant les scores de perception de la corruption les plus faibles. Selon l'indice utilisé, un score proche de 0 indique une très faible perception de la corruption, ce qui correspond à des pays très transparents.\n",
+        "\n",
+        "**Signification :**  \n",
+        "Singapour, le Danemark et la Finlande figurent parmi les pays les plus transparents et les moins corrompus au monde. Ces pays se distinguent par une gouvernance efficace et des institutions solides, ce qui constitue souvent un facteur fortement associé à un niveau de bonheur élevé.\n",
+        "\n",
+        "\n",
+        "## Summary statistics"
+      ],
+      "id": "0e8d45e2"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "happiness_report_clean.describe()"
+      ],
+      "id": "c39bd8e0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Corrélations entre les facteurs de bonheur"
+      ],
+      "id": "0564f198"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "sns.heatmap(happiness_data.corr(), annot=True, cmap=\"coolwarm\")\n",
+        "plt.title(\"Corrélations entre facteurs de bonheur\")\n",
+        "plt.show()"
+      ],
+      "id": "c9178a09",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "raw",
+      "metadata": {},
+      "source": [
+        "**PIB par habitant (Logged GDP per capita) et Espérance de vie en bonne santé (Healthy life expectancy) : 0.86**\n",
+        "\n",
+        "**Signification :**  \n",
+        "Il s'agit de la corrélation la plus forte du graphique. Les pays ayant un PIB par habitant élevé bénéficient généralement d'un meilleur système de santé et de meilleures conditions de vie, ce qui se traduit par une espérance de vie en bonne santé plus élevée.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "**PIB par habitant (Logged GDP per capita) et Soutien social (Social support) : 0.79**\n",
+        "\n",
+        "**Signification :**  \n",
+        "Corrélation forte. Le développement économique va souvent de pair avec une meilleure protection sociale et des politiques de soutien plus efficaces pour les citoyens.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "**Soutien social (Social support) et Espérance de vie en bonne santé (Healthy life expectancy) : 0.72**\n",
+        "\n",
+        "**Signification :**  \n",
+        "Corrélation forte. Lorsque les citoyens bénéficient d’un bon soutien de la communauté et de la société, leur santé physique et mentale s’améliore, ce qui contribue à prolonger leur espérance de vie en bonne santé.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "**Liberté de faire des choix de vie (Freedom to make life choices)**\n",
+        "\n",
+        "Ce facteur présente des corrélations plus modérées par rapport aux trois facteurs précédents :\n",
+        "\n",
+        "- Corrélation avec le PIB : 0.43  \n",
+        "- Corrélation avec le soutien social : 0.48  \n",
+        "- Corrélation avec l’espérance de vie : 0.46  \n",
+        "\n",
+        "**Signification :**  \n",
+        "La liberté de faire des choix de vie contribue au bonheur, mais elle dépend moins strictement de la richesse du pays ou de l’espérance de vie que les autres facteurs.\n",
+        "\n",
+        "---"
+      ],
+      "id": "501e4f98"
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Les corrélations associées à la perception de la corruption sont toutes négatives, ce qui est cohérent puisque, dans ce jeu de données, un score élevé correspond à une corruption plus importante.\n",
+        "\n",
+        "- **Liberté de faire des choix de vie : -0.40**  \n",
+        "  Corrélation négative modérée : une corruption perçue plus élevée est associée à une moindre liberté de choix.\n",
+        "\n",
+        "- **Espérance de vie : -0.36** et **PIB par habitant : -0.34**  \n",
+        "  Corrélations négatives : les pays plus corrompus tendent à avoir un niveau de richesse et de santé plus faibles.\n",
+        "\n",
+        "- **Soutien social : -0.20**  \n",
+        "  Corrélation négative plus faible, indiquant un impact plus indirect sur le sentiment de soutien social.\n",
+        "\n",
+        "\n",
+        "## Relation entre le PIB et le bonheur"
+      ],
+      "id": "8aea2b4d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "sns.scatterplot(\n",
+        "    data=happiness_report_clean,\n",
+        "    x=\"Logged GDP per capita\",\n",
+        "    y=\"Ladder score\"\n",
+        ")\n",
+        "plt.title(\"GDP vs Happiness\")\n",
+        "plt.show()"
+      ],
+      "id": "51b70115",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Ce nuage de points (scatter plot) montre une tendance linéaire positive claire entre le PIB par habitant (axe X) et le score de bonheur (Ladder score, axe Y).\n",
+        "\n",
+        "**Signification :**  \n",
+        "Plus le PIB par habitant d'un pays est élevé, plus le score de bonheur de sa population tend à être élevé. Les pays situés en haut à droite du graphique sont généralement les plus riches et les plus heureux, tandis que ceux en bas à gauche présentent à la fois un PIB faible et un faible niveau de bien-être. Cela confirme la forte corrélation positive (0.86) observée précédemment dans la matrice de corrélation.\n",
+        "\n",
+        "## Relation entre le soutien social et le bonheur"
+      ],
+      "id": "da3fcfe0"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "sns.scatterplot(\n",
+        "    data=happiness_report_clean,\n",
+        "    x=\"Social support\",\n",
+        "    y=\"Ladder score\"\n",
+        ")\n",
+        "plt.title(\"Social support vs Happiness\")\n",
+        "plt.show()"
+      ],
+      "id": "b68890a0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Ce nuage de points (scatter plot) illustre la relation entre le soutien social (axe X) et le score de bonheur (Ladder score, axe Y). On observe une tendance linéaire positive bien marquée.\n",
+        "\n",
+        "**Signification :**  \n",
+        "Le soutien social joue un rôle majeur dans le bien-être des populations. Les pays offrant un tissu social fort et un bon système d'entraide (situés vers la droite de l’axe X) affichent des niveaux de bonheur nettement plus élevés. À l’inverse, un faible soutien social est presque systématiquement associé à un score de bonheur inférieur. Cela confirme graphiquement la corrélation positive de 0.72 identifiée précédemment.\n",
+        "\n",
+        "# Jointure des données"
+      ],
+      "id": "67a50d62"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "data_merge = corona_data.join(happiness_data, how = 'inner')\n",
+        "data_merge.to_csv(\"data/data_merge.csv\", index=False)\n",
+        "data_merge.shape\n",
+        "data_merge.head()"
+      ],
+      "id": "4b804881",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/Users/nguyenduchoangviet/Documents/github/Projet-Covid-19-Data-Analyst/.venv/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

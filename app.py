@@ -94,7 +94,7 @@ with col2:
     st.pyplot(fig)
 
 with col3:
-    st.subheader("🗓 Top 10 COVID Countries")
+    st.subheader("🗓 Top 8 COVID Countries")
     top8 = pd.DataFrame({
         "Country": [
             "US", "India", "France", "Germany", "Brazil",

@@ -35,7 +35,11 @@ Le projet est divisé en plusieurs parties :
     
 
 ::: callout-note
-## Consulter le darshboard
+## Consulter le dashboard
 
-<a href="images/dashboard_covid.png" target="_blank"> <img src="images/dashboard_covid.png" alt="Dashboard du projet" style="max-width:100%; height:auto; border-radius:8px;"/> </a>
+<a href="images/dashboard_covid_happiness.html" target="_blank">
+  <img src="images/dashboard_covid.png"
+       alt="Dashboard du projet"
+       style="max-width:100%; height:auto; border-radius:8px;">
+</a>
 :::

@@ -36,5 +36,7 @@ On résume les principaux résultats obtenus, discute de leurs limites et propos
 
 **Consulter le dashboard**
 
-[![Dashboard du projet](images/dashboard_covid.png)](images/dashboard_covid.png)
+[![Dashboard du projet](images/dashboard_covid.png)](https://hoangviet1810.github.io/Projet-Covid-19-Data-Analyst/images/dashboard_covid_happiness.html)
+
+➡️ Cliquez sur l'image pour ouvrir le dashboard interactif.
 

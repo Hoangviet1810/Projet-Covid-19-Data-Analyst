@@ -8,7 +8,7 @@ execute:
 website:
   title: "Projet COVID-19 Data Analysis using Python"
   navbar:
-    background: "#2563eb"
+    background: "#6c63ff"
     left:
       - href: index.qmd
         text: Accueil

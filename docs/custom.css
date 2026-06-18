@@ -3,7 +3,7 @@
    ========================================== */
 
 :root {
-  --bs-primary: #1a73e8;
+  --bs-primary: #3d35c9;
 }
 
 /* ==========================================
@@ -11,31 +11,18 @@
    ========================================== */
 
 .navbar {
-
-background-color: #2563eb !important;
-
+  background-color: #3d35c9 !important;
 }
-
-
 
 .navbar-dark .navbar-nav .nav-link,
-
 .navbar-brand {
-
-color: #ffffff !important;
-
-font-weight: 500;
-
+  color: #ffffff !important;
+  font-weight: 500;
 }
 
-
-
 .navbar-dark .navbar-nav .nav-link:hover,
-
 .navbar-brand:hover {
-
-color: #e5e7eb !important;
-
+  color: #e5e7eb !important;
 }
 
 /* ==========================================
@@ -43,12 +30,12 @@ color: #e5e7eb !important;
    ========================================== */
 
 a {
-  color: #1a73e8;
+  color: #3d35c9;
   text-decoration: none;
 }
 
 a:hover {
-  color: #1557b0;
+  color: #2d24b0;
   text-decoration: underline;
 }
 
@@ -82,28 +69,24 @@ ul li {
    TABLE OF CONTENTS (TOC)
    ========================================== */
 
-/* Titre "Sur cette page" */
 #TOC-title {
-  color: #1a73e8;
+  color: #3d35c9;
   font-weight: 700;
 }
 
-/* Liens du TOC */
 #TOC a {
   color: #4b5563 !important;
 }
 
-/* Hover */
 #TOC a:hover {
-  color: #1a73e8 !important;
+  color: #3d35c9 !important;
 }
 
-/* Section active */
 #TOC .active,
 #TOC .nav-link.active,
 .sidebar nav .active {
-  color: #1a73e8 !important;
-  border-left: 3px solid #1a73e8 !important;
+  color: #3d35c9 !important;
+  border-left: 3px solid #3d35c9 !important;
   font-weight: 600;
 }
 
@@ -124,13 +107,13 @@ code {
    ========================================== */
 
 .btn-primary {
-  background-color: #1a73e8;
-  border-color: #1a73e8;
+  background-color: #3d35c9;
+  border-color: #3d35c9;
 }
 
 .btn-primary:hover {
-  background-color: #1557b0;
-  border-color: #1557b0;
+  background-color: #2d24b0;
+  border-color: #2d24b0;
 }
 
 /* ==========================================
@@ -170,8 +153,8 @@ html {
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: #0b0c10; /* Màu nền đen tối */
-    z-index: 999999; /* Đảm bảo đè lên toàn bộ dashboard của Quarto */
+    background-color: #0b0c10;
+    z-index: 999999;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -182,43 +165,32 @@ html {
     text-align: center;
 }
 
-/* Vòng xoay màu sắc gradient */
 .spinner {
     position: relative;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 25px;
+    width: 110px;
+    height: 110px;
+    margin: 0 auto;
     border-radius: 50%;
-    
-    /* Sử dụng conic-gradient để tạo dải màu xoay mượt mà chuẩn xác như ảnh logo */
     background: conic-gradient(
-        #00b894, /* Xanh lục bảo */
-        #00d2d3, /* Xanh cyan neon */
-        #ffb800, /* Vàng hổ phách */
-        #ff2a4b, /* Đỏ Crimson */
-        #00b894  /* Khép góc quay lại màu xanh */
+        #00b894,
+        #00d2d3,
+        #ffb800,
+        #ff2a4b,
+        #00b894
     );
-    
-    /* Tạo lỗ rỗng ở giữa để biến khối tròn thành một cái vòng (Spinner) */
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
     -webkit-mask-composite: xor;
-    
-    padding: 3px; /* Đây chính là độ dày (thickness) của vòng spinner */
-    
-    /* Hiệu ứng hắt sáng nhẹ ra nền tối giống hệt trên web của bạn */
+    padding: 3px;
     box-shadow: 0 0 15px rgba(0, 210, 211, 0.25);
-    
-    /* Animation quay giật vô lăng kiểu Jarvis */
-    animation: spin 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    animation: spin 1.4s cubic-bezier(0.42, 0, 0.58, 1) infinite;
 }
 
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
 
-/* Tên tác giả giống style ảnh 1 */
 .loader-text {
     color: #f3a683 !important;
     font-family: 'Courier New', Courier, monospace !important;
@@ -236,59 +208,32 @@ html {
     text-transform: uppercase;
 }
 
-/* Hiệu ứng xoay tròn */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Khi load xong sẽ áp dụng class này để ẩn đi */
 #preloader.fade-out {
     opacity: 0;
     visibility: hidden;
 }
 
-
-/* ============================================================ */
-/* CẬP NHẬT CSS CHO PRELOADER (Căn chỉnh V đứng yên)         */
-/* ============================================================ */
-
-/* Cập nhật class spinner: Chỉ còn chứa hiệu ứng xoay và vòng tròn */
-.spinner {
-    position: relative; /* Giữ position: relative */
-    width: 110px;        /* Giữ kích thước ban đầu */
-    height: 110px;       /* Giữ kích thước ban đầu */
-    margin: 0 auto;       /* Bỏ margin-bottom lớn ban đầu */
-    /* Giữ nguyên các border-color và radius khác */
-    border-radius: 50%;
-    animation: spin 1.4s cubic-bezier(0.42, 0, 0.58, 1) infinite;
-    /* Không cần display: flex; justify-content: center; align-items: center; */
-}
-
-/* Thêm class mới cho nhóm ở tâm */
 .loader-center-group {
-    position: relative;   /* Cho phép con cái định vị tuyệt đối */
+    position: relative;
     width: 110px;
     height: 110px;
-    margin: 0 auto 35px; /* Giữ margin-bottom ở đây */
-    display: flex;       /* Dùng flex để căn chỉnh *tâm* của group */
+    margin: 0 auto 35px;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Thêm container chứa chữ V để căn chỉnh */
 .loader-letter-container {
-    position: absolute;   /* Nằm tuyệt đối trên group cha */
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    display: flex;       /* Flex để căn chỉnh chữ V vào tâm */
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Cập nhật class loader-letter để nó đứng yên */
 .loader-letter {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 36px;
@@ -296,28 +241,24 @@ html {
     background: linear-gradient(135deg, #00cec9, #a55eea);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
 }
 
 /* ============================================================ */
 /* ÉP CÁC CHỮ TRÊN NAVBAR NẰM TRÊN 1 DÒNG DUY NHẤT             */
 /* ============================================================ */
 
-/* 1. Ngăn không cho chữ tự động xuống dòng */
 .navbar-nav .nav-item .nav-link,
 .navbar-nav .nav-item {
-    white-space: nowrap !important; /* Tuyệt đối không cho xuống dòng */
+    white-space: nowrap !important;
 }
 
-/* 2. Thu nhỏ khoảng cách giữa các mục một chút để vừa màn hình */
 .navbar-nav .nav-link {
     padding-left: 10px !important;
     padding-right: 10px !important;
-    font-size: 0.95rem !important; /* Hạ size chữ xuống một xíu nếu menu của bạn quá dài */
+    font-size: 0.95rem !important;
 }
 
-/* 3. Tăng không gian hiển thị cho toàn bộ cụm menu */
 .navbar-collapse {
     flex-grow: 1;
-    justify-content: flex-end; /* Đẩy các menu sang bên phải một cách ngăn nắp */
+    justify-content: flex-end;
 }

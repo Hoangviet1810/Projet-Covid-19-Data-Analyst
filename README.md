@@ -23,9 +23,36 @@ Pour cela, on utilise l'ensemble de données COVID-19 publié par l'université 
 - <https://www.kaggle.com/datasets/antgoldbloom/covid19-data-from-john-hopkins-university>
 - <https://www.kaggle.com/datasets/ajaypalsinghlo/world-happiness-report-2021>
 
+## 📊 Données utilisées
+ 
+| Source | Description |
+|--------|-------------|
+| Johns Hopkins University | Données COVID-19 (cas, décès, guérisons) |
+| Gallup World Poll / ONU | World Happiness Report |
+| Kaggle | Dataset public disponible en ligne |
+ 
+---
+ 
+## 🔍 Indicateurs analysés
+ 
+- **GDP per capita** — Richesse économique par habitant
+- **Social support** — Réseau de soutien social perçu
+- **Life expectancy** — Espérance de vie en bonne santé
+- **Freedom** — Liberté de faire des choix de vie
+- **Generosity** — Générosité
+- **Corruption perception** — Perception de la corruption
+
+
 # Organisation des codes
 
 Le projet est divisé en plusieurs parties :
+
+```
+├── Part1  — Préparation et nettoyage des données
+├── Part2  — Analyse exploratoire (EDA)
+├── Part3  — Corrélations et régressions
+└── Part4  — Conclusion
+```
 
 ## Partie 1 : Préparation et nettoyage des données
 
@@ -47,6 +74,12 @@ Dans cette partie, on étudie les corrélations entre le taux maximal d'infectio
 ## Partie 4 : Conclusion
 
 On résume les principaux résultats obtenus, discute de leurs limites et propose des pistes d'amélioration pour des analyses futures.
+
+## 🚀 Démo
+ 
+👉 [Voir le site en ligne](https://hoangviet1810.github.io/covid/)
+ 
+---
 
 **Consulter le dashboard**
 

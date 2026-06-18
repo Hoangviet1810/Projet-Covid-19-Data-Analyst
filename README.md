@@ -1,3 +1,17 @@
+<div align="center">
+<h1>COVID-19 & Bonheur</h1>
+<p><em>Analyse de données — Impact du COVID-19 sur le bonheur mondial</em></p>
+<a href="#"><img src="https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white&style=flat-square"></a>
+<a href="#"><img src="https://img.shields.io/badge/Data-Analysis-orange?style=flat-square"></a>
+<a href="#"><img src="https://img.shields.io/badge/COVID--19-World%20Happiness-blueviolet?style=flat-square"></a>
+<a href="#"><img src="https://img.shields.io/badge/Status-Completed-brightgreen?style=flat-square"></a>
+<a href="https://hoangviet1810.github.io/covid/">
+  <img src="https://img.shields.io/badge/Demo-Live_Website-red?style=flat-square">
+</a>
+<a href="#"><img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square"></a>
+</div>
+<br>
+
 # Projet-Covid-19-Data-Analyst
 
 # Présentation du projet

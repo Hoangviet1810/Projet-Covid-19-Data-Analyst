@@ -3,7 +3,7 @@
    ========================================== */
 
 :root {
-  --bs-primary: #3d35c9;
+  --bs-primary: #2d24b0;
 }
 
 /* ==========================================
@@ -11,7 +11,7 @@
    ========================================== */
 
 .navbar {
-  background-color: #3d35c9 !important;
+  background-color: #2d24b0 !important;
 }
 
 .navbar-dark .navbar-nav .nav-link,
@@ -30,7 +30,7 @@
    ========================================== */
 
 a {
-  color: #3d35c9;
+  color: #2d24b0;
   text-decoration: none;
 }
 
@@ -70,7 +70,7 @@ ul li {
    ========================================== */
 
 #TOC-title {
-  color: #3d35c9;
+  color: #2d24b0;
   font-weight: 700;
 }
 
@@ -79,14 +79,14 @@ ul li {
 }
 
 #TOC a:hover {
-  color: #3d35c9 !important;
+  color: #2d24b0 !important;
 }
 
 #TOC .active,
 #TOC .nav-link.active,
 .sidebar nav .active {
-  color: #3d35c9 !important;
-  border-left: 3px solid #3d35c9 !important;
+  color: #2d24b0 !important;
+  border-left: 3px solid #2d24b0 !important;
   font-weight: 600;
 }
 
@@ -107,8 +107,8 @@ code {
    ========================================== */
 
 .btn-primary {
-  background-color: #3d35c9;
-  border-color: #3d35c9;
+  background-color: #2d24b0;
+  border-color: #2d24b0;
 }
 
 .btn-primary:hover {
